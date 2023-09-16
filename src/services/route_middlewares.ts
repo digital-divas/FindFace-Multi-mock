@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validToken } from "./token";
 
+const licenseError = false;
 
 function validAuthorization(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
@@ -16,6 +17,19 @@ function validAuthorization(req: Request, res: Response, next: NextFunction) {
         return res.status(401).json({
             "code": "UNAUTHORIZED",
             "desc": "Invalid token."
+        });
+    }
+
+    if (licenseError) {
+        return res.status(401).json({
+            "traceback": "",
+            "code": "LICENSE_ERROR",
+            "desc": "Failed to validate FFSecurity license",
+            "original_error": {
+                "code": "LICENSE_ERROR",
+                "desc": "FKERROR_LICENSE: Invalid license",
+                "param": null
+            }
         });
     }
 
