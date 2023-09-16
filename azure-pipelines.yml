@@ -1,0 +1,99 @@
+# Build and push image to Azure Container Registry;
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+      - master
+      - stage
+  tags:
+    include:
+      - "*"
+  paths:
+    exclude:
+      - README.md
+variables:
+  # Container registry service connection established during pipeline creation
+  # Master variables
+  containerRegistryGeneric: cameritegeneric-4966
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  - stage: Tests
+    displayName: Run tests
+    jobs:
+      - job: RunTests
+        displayName: Install dependencies and run tests
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "16.x"
+            displayName: "Install Node.js"
+
+          - task: CmdLine@2
+            displayName: Installing dependencies
+            inputs:
+              script: |
+                npm install
+
+          - task: CmdLine@2
+            displayName: Linter Validation
+            inputs:
+              script: |
+                npm run eslint
+
+          - task: CmdLine@2
+            displayName: Build app
+            inputs:
+              script: |
+                npm run build
+
+          - task: CmdLine@2
+            displayName: Run tests
+            inputs:
+              script: |
+                npm run devops_coverage
+
+          - task: CmdLine@2
+            condition: succeededOrFailed()
+            displayName: Generate Cobertura Report
+            inputs:
+              script: |
+                npm run generate_cobertura
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/**/test-results.xml"
+              testRunTitle: Publish test results for NodeJS
+
+          - task: PublishCodeCoverageResults@1
+            condition: succeededOrFailed()
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: $(System.DefaultWorkingDirectory)/**/coverage/cobertura-coverage.xml
+              reportDirectory: $(System.DefaultWorkingDirectory)/**/coverage
+              failIfCoverageEmpty: true
+
+  - stage: ProductionBuildAndPushDocker
+    displayName: Production - Build and push docker image
+    dependsOn:
+      - Tests
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImage)
+        steps:
+          - task: Docker@2
+            displayName: Build and push an image to container registry
+            inputs:
+              containerRegistry: $(containerRegistry)
+              repository: ntechlab-mock
+              command: buildAndPush
+              Dockerfile: Dockerfile
+              tags: latest

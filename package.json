@@ -1,0 +1,53 @@
+{
+  "name": "ntechlab-mock",
+  "version": "1.0.0",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "eslint": "eslint ./src",
+    "eslint_fix": "eslint ./src --fix",
+    "test": "env TS_NODE_TRANSPILE_ONLY=true mocha -r ts-node/register 'tests/**/**.test.ts'  --timeout 180000 --exit",
+    "coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc --reporter=html --reporter=text -- mocha -r ts-node/register 'tests/**/**.test.ts' --timeout 180000 --exit",
+    "devops_coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc -- mocha -r ts-node/register 'tests/**/**.test.ts' --reporter ./tests/assets/multiple_reporters.js --timeout 180000 --exit",
+    "generate_cobertura": "nyc report --reporter=cobertura"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@ssh.dev.azure.com:v3/camerite/Camerite%20Dev/ntechlab-mock"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "superagent": "^7.1.6"
+  },
+  "devDependencies": {
+    "@sentry/types": "^7.2.0",
+    "@types/chai": "^4.3.1",
+    "@types/express": "^4.17.13",
+    "@types/mocha": "^9.1.1",
+    "@types/morgan": "^1.9.3",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^18.0.0",
+    "@types/superagent": "^4.1.15",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "chai": "^4.3.6",
+    "concurrently": "^7.2.2",
+    "eslint": "^8.17.0",
+    "mocha": "^10.0.0",
+    "mocha-junit-reporter": "^2.0.2",
+    "nodemon": "^2.0.16",
+    "nyc": "^15.1.0",
+    "supertest": "^6.2.3",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
