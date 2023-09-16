@@ -92,7 +92,7 @@ stages:
           - task: Docker@2
             displayName: Build and push an image to container registry
             inputs:
-              containerRegistry: $(containerRegistry)
+              containerRegistry: $(containerRegistryGeneric)
               repository: ntechlab-mock
               command: buildAndPush
               Dockerfile: Dockerfile
