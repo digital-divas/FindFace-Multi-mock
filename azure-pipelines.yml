@@ -116,7 +116,7 @@ stages:
             inputs:
               command: "build"
               containerRegistry: $(containerRegistryGeneric)
-              repository: facial-camera-receiver
+              repository: ntechlab-mock
               buildContext: $(Build.SourcesDirectory)
               Dockerfile: Dockerfile
               tags: |
@@ -127,6 +127,6 @@ stages:
             inputs:
               command: "push"
               containerRegistry: $(containerRegistryGeneric)
-              repository: facial-camera-receiver
+              repository: ntechlab-mock
               tags: |
                 latest
