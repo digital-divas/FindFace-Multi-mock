@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import { loadDetectRoutes } from '../routes/detection';
 import { loadCardRoutes } from '../routes/cards';
 import { loadAuthRoutes } from '../routes/auth';
+import { loadSessionsRoutes } from '../routes/sessions';
 
 interface WebService {
     port: string;
@@ -25,6 +26,7 @@ class WebService {
         loadDetectRoutes(this.app);
         loadCardRoutes(this.app);
         loadAuthRoutes(this.app);
+        loadSessionsRoutes(this.app);
 
         this.app.get('/', (req: Request, res: Response) => {
             res.status(200).send('OK');
