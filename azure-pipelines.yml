@@ -78,6 +78,17 @@ stages:
               reportDirectory: $(System.DefaultWorkingDirectory)/**/coverage
               failIfCoverageEmpty: true
 
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: $(Build.SourcesDirectory)/kube
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactStagingDirectory)
+              ArtifactName: yml_deploy_files
+              publishLocation: Container
+
   - stage: DockerBuildAndPushMaster
     dependsOn:
       - Tests
