@@ -19,9 +19,7 @@ class WebService {
         this.app.use(express.json({ limit: '50mb' }));
         this.app.use(express.urlencoded({ limit: '50mb' }));
 
-        if (process.env.NODE_ENV == 'development' && !process.env.SILENT_EXPRESS) {
-            this.app.use(morgan("common"));
-        }
+        this.app.use(morgan("common"));
         console.log("[WebService] - Adding routes");
         loadDetectRoutes(this.app);
         loadCardRoutes(this.app);
