@@ -35,6 +35,13 @@ function loadDetectRoutes(app: Express) {
             });
         }
 
+        // TODO: implement no face on photo
+        // return res.status(200).json({
+        //     "orientation": 1,
+        //     "objects": {
+        //     }
+        // });
+
         return res.status(200).json({
             "orientation": 1,
             "objects": {

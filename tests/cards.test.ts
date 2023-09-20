@@ -55,4 +55,81 @@ describe('Cards Route Testing', async () => {
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
     });
+
+    it('test create, update and delete human', async () => {
+        let res;
+        // create
+        res = await request.post(`/cards/humans/`)
+            .send({ name: "zéca", watch_lists: 1 })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.id).to.not.be.null;
+        const humanId = res.body.id;
+
+        // update
+        res = await request.patch(`/cards/humans/${humanId}/`)
+            .send({ name: "zéca editado" })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.id).to.not.be.null;
+
+        // patch without changes should be okay too
+        res = await request.patch(`/cards/humans/${humanId}/`)
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.id).to.not.be.null;
+
+        // delete
+        res = await request.delete(`/cards/humans/${humanId}/`)
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(204);
+
+    });
+
+    it('test invalid human creations - no name', async () => {
+        const res = await request.post(`/cards/humans/`)
+            .send({ watch_lists: 1 })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+    it('test invalid human creations - no watchlist', async () => {
+        const res = await request.post(`/cards/humans/`)
+            .send({ name: 'zéca' })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+    it('test invalid human creations - invalid watchlist', async () => {
+        const res = await request.post(`/cards/humans/`)
+            .send({ name: 'zéca', watch_lists: -1 })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+    it('test invalid human creations - non existent watchlist', async () => {
+        const res = await request.post(`/cards/humans/`)
+            .send({ name: 'zéca', watch_lists: [9999, 8888] })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(403);
+        expect(res.body.code).to.be.equal('PERMISSION_DENIED');
+    });
+
+    it('test invalid human update - non existent humanId', async () => {
+        const res = await request.patch(`/cards/humans/-1/`)
+            .send({ name: "zéca editado" })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(404);
+        expect(res.body.code).to.be.equal('NOT_FOUND');
+    });
+
+    it('test invalid human update - non existent humanId', async () => {
+        const res = await request.delete(`/cards/humans/-1/`)
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(404);
+        expect(res.body.code).to.be.equal('NOT_FOUND');
+    });
 });

@@ -5,7 +5,7 @@ import { webService } from '../src/services/web-service';
 
 const request = agent(webService.app);
 
-describe('Sessions Route Testing', async () => {
+describe('Watch Lists Route Testing', async () => {
 
     let token = "";
 
@@ -23,8 +23,8 @@ describe('Sessions Route Testing', async () => {
 
     });
 
-    it('test get sessions', async () => {
-        const res = await request.get(`/sessions/`).set('Authorization', 'Token ' + token);
+    it('test get watch lists', async () => {
+        const res = await request.get(`/watch-lists/`).set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
     });
 });

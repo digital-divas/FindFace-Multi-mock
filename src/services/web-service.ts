@@ -5,6 +5,7 @@ import { loadDetectRoutes } from '../routes/detect';
 import { loadCardRoutes } from '../routes/cards';
 import { loadAuthRoutes } from '../routes/auth';
 import { loadSessionsRoutes } from '../routes/sessions';
+import { loadWatchListsRoutes } from '../routes/watch-lists';
 
 interface WebService {
     port: string;
@@ -25,6 +26,7 @@ class WebService {
         loadCardRoutes(this.app);
         loadAuthRoutes(this.app);
         loadSessionsRoutes(this.app);
+        loadWatchListsRoutes(this.app);
 
         this.app.get('/', (req: Request, res: Response) => {
             res.status(200).send('OK');
