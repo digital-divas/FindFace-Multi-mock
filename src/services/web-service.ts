@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import morgan from 'morgan';
 
-import { loadDetectRoutes } from '../routes/detection';
+import { loadDetectRoutes } from '../routes/detect';
 import { loadCardRoutes } from '../routes/cards';
 import { loadAuthRoutes } from '../routes/auth';
 import { loadSessionsRoutes } from '../routes/sessions';
