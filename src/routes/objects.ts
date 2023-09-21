@@ -27,7 +27,7 @@ function loadObjectsRoutes(app: Express) {
             return res.status(400).json({
                 "traceback": "",
                 "code": "BAD_PARAM",
-                "desc": `Invalid pk \\"${req.body.card}\\" - object does not exist.`,
+                "desc": `Invalid pk "${req.body.card}" - object does not exist.`,
                 "param": "card"
             });
         }
@@ -64,7 +64,7 @@ function loadObjectsRoutes(app: Express) {
 
         const face = createFace(human.id, photo);
 
-        return res.status(200).json(face);
+        return res.status(201).json(face);
 
     });
 

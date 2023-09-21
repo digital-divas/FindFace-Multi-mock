@@ -43,7 +43,7 @@ describe('Objects Route Testing', async () => {
                 contentType: 'image/jpeg'
             })
             .set('Authorization', 'Token ' + token);
-        expect(res.statusCode).to.be.equal(200);
+        expect(res.statusCode).to.be.equal(201);
         expect(res.body.id).to.not.be.null;
         const faceId = res.body.id;
 
@@ -71,7 +71,7 @@ describe('Objects Route Testing', async () => {
                 contentType: 'image/jpeg'
             })
             .set('Authorization', 'Token ' + token);
-        expect(res.statusCode).to.be.equal(200);
+        expect(res.statusCode).to.be.equal(201);
         expect(res.body.id).to.not.be.null;
 
         res = await request.delete(`/cards/humans/${anotherHuman}/`)
