@@ -98,4 +98,34 @@ describe('Detect Route Testing', async () => {
 
     });
 
+    it('no attributes on request', async () => {
+        const file = await readFile(__dirname + "/assets/11296869.jpg");
+
+        const res = await request.post(`/detect/`)
+            .attach("photo", file, {
+                filename: 'photo.jpg',
+                contentType: 'image/jpeg'
+            })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+    it('no photo on request', async () => {
+        const res = await request.post(`/detect/`)
+            .field('attributes', JSON.stringify({
+                face: {
+                    age: false,
+                    beard: false,
+                    emotions: false,
+                    glasses: false,
+                    medmask: false
+                }
+            }))
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+
 });
