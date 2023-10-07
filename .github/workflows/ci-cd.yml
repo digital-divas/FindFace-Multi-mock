@@ -1,0 +1,70 @@
+name: FindFace Multi Mock CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.8.1
+        with:
+          node-version-file: .nvmrc
+
+      - name: Installing dependencies
+        run: npm install
+
+      - name: Linter Validation
+        run: npm run eslint
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run devops_coverage
+
+      - name: Run generate cobertura report
+        run: |
+          npm run generate_cobertura
+          mv ./coverage/cobertura-coverage.xml ./coverage.xml
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          verbose: true
+          fail_ci_if_error: true
+
+  build_push_docker:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.8.1
+        with:
+          node-version-file: .nvmrc
+
+      - name: Installing dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ezequielmr94/findface-multi-mock
+          tags: latest

@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@ssh.dev.azure.com:v3/camerite/Camerite%20Dev/ntechlab-mock"
+    "url": "git@github.com:digital-divas/FindFace-Multi-mock.git"
   },
   "keywords": [],
   "author": "",
