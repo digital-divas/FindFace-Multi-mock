@@ -7,10 +7,10 @@ The implementation is based on [this documentation](https://docs.ntechlab.com/pr
 ## How to run?
 
 ```bash
-docker run --rm -d --name ntechlab -p 5000:5000 digitaldivas/findface-multi-mock
+docker run --rm -d --name ntechlab -p 5000:5000 ezequielmr94/findface-multi-mock
 
 # or if you want to change the port on the host for 8956 for example
-docker run --rm -d --name ntechlab -p 8956:5000 digitaldivas/findface-multi-mock
+docker run --rm -d --name ntechlab -p 8956:5000 ezequielmr94/findface-multi-mock
 ```
 
 ## Install
