@@ -9,8 +9,8 @@ const upload = multer({
 });
 
 function loadObjectsRoutes(app: Express) {
-    app.post('/objects/faces/', validAuthorization, upload.any(), async (req: Request, res: Response) => {
-        let photo;
+    app.post('/objects/faces/', validAuthorization, upload.single('source_photo'), async (req: Request, res: Response) => {
+        const source_photo = req.file;
 
         if (!req.body.card) {
             return res.status(400).json({
@@ -32,12 +32,7 @@ function loadObjectsRoutes(app: Express) {
             });
         }
 
-        if (req.files) {
-            const files = req.files as Express.Multer.File[];
-            photo = files.find((file) => file.fieldname == "source_photo");
-        }
-
-        if (!photo) {
+        if (!source_photo) {
             return res.status(400).json({
                 "traceback": "",
                 "code": "BAD_PARAM",
@@ -62,7 +57,7 @@ function loadObjectsRoutes(app: Express) {
         //     "param": "source_photo"
         // });
 
-        const face = createFace(human.id, photo);
+        const face = createFace(human.id, source_photo);
 
         return res.status(201).json(face);
 

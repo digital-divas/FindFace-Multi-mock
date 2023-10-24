@@ -8,9 +8,9 @@ const upload = multer({
 
 function loadDetectRoutes(app: Express) {
 
-    app.post('/detect/', validAuthorization, upload.any(), async (req: Request, res: Response) => {
+    app.post('/detect/', validAuthorization, upload.single('photo'), async (req: Request, res: Response) => {
 
-        let photo;
+        const photo = req.file;
 
         if (!('attributes' in req.body)) {
             return res.status(400).json({
@@ -19,11 +19,6 @@ function loadDetectRoutes(app: Express) {
                 "desc": "This field is required.",
                 "param": "attributes"
             });
-        }
-
-        if (req.files) {
-            const files = req.files as Express.Multer.File[];
-            photo = files.find((file) => file.fieldname == "photo");
         }
 
         if (!photo) {

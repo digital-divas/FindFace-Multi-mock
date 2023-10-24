@@ -10,7 +10,7 @@
     "eslint": "eslint ./src",
     "eslint_fix": "eslint ./src --fix",
     "test": "env TS_NODE_TRANSPILE_ONLY=true mocha -r ts-node/register 'tests/**/**.test.ts'  --timeout 180000 --exit",
-    "coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc --reporter=html --reporter=text -- mocha -r ts-node/register 'tests/**/**.test.ts' --timeout 180000 --exit",
+    "coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc --reporter=html --reporter=text -- mocha -r ts-node/register 'tests/**/**.test.ts' --timeout 180000 --exit && nyc report --reporter=cobertura && mv ./coverage/cobertura-coverage.xml ./coverage.cobertura.xml",
     "devops_coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc -- mocha -r ts-node/register 'tests/**/**.test.ts' --reporter ./tests/assets/multiple_reporters.js --timeout 180000 --exit",
     "generate_cobertura": "nyc report --reporter=cobertura"
   },
