@@ -35,3 +35,9 @@ npm run dev
 nvm use
 npm run test
 ```
+
+### How to deploy
+
+```bash
+kubectl apply -f kube/deployment -n <your_desired_namespace>
+```

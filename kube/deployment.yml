@@ -1,0 +1,50 @@
+# Azure Base deployment
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: find-face-app-internal
+  annotations:
+    # If you want to expose the service to the internet just remove the internal LB
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 1.2.3.4 # Replace with the value that suits your subnet
+  ports:
+    - port: 5000
+  selector:
+    app: find-face-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: find-face-app
+  labels:
+    app: find-face-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: find-face-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: find-face-app
+        version: v1
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: find-face-app
+          image: ezequielmr94/findface-multi-mock
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100M
+            limits:
+              cpu: 100m
+              memory: 150M
