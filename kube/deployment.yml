@@ -34,7 +34,7 @@ spec:
         version: v1
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": linux
+        kubernetes.io/os: linux
       containers:
         - name: find-face-app
           image: ezequielmr94/findface-multi-mock
