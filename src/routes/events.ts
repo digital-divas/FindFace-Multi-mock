@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
-import { createEvent } from '../controllers/events';
+import { createEvent, getEvent } from '../controllers/events';
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -82,6 +82,32 @@ function loadEventsRoutes(app: Express) {
             ],
             "errors": []
         });
+    });
+
+    app.get('/events/faces/:id/', validAuthorization, async (req: Request, res: Response) => {
+        const eventId = Number(req.params.id);
+        if (Number.isNaN(eventId)) {
+            return res.status(400).json({
+                code: "BAD_PARAM",
+                desc: "ID must be a positive integer."
+            });
+        }
+        if (eventId < 1) {
+            return res.status(400).json({
+                code: "BAD_PARAM",
+                desc: "ID must be non-zero uint64 number."
+            });
+        }
+
+        const event = getEvent(eventId);
+        if (!event) {
+            return res.status(404).json({
+                code: "NOT_FOUND",
+                desc: "No FaceEvent matches the given query."
+            });
+        }
+
+        return res.status(200).json(event);
     });
 
     app.get('/events/faces/', validAuthorization, async (req: Request, res: Response) => {
