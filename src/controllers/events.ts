@@ -164,4 +164,8 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
     return eventFace;
 }
 
-export { createEvent };
+function getEvent(eventId: number) {
+    return events[eventId];
+}
+
+export { createEvent, getEvent };
