@@ -62,7 +62,8 @@ function loadCardRoutes(app: Express) {
         }
 
         const human = createHuman({
-            name: req.body.name
+            name: req.body.name,
+            active: req.body.active ?? true
         });
 
         return res.status(200).json(human);
@@ -83,6 +84,10 @@ function loadCardRoutes(app: Express) {
 
         if (req.body.name) {
             human.name = req.body.name;
+        }
+
+        if (req.body.active) {
+            human.active = req.body.active;
         }
 
         return res.status(200).json(human);
