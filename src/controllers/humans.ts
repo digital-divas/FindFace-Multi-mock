@@ -9,26 +9,26 @@ interface Human {
     name: string;
     comment: string;
     watch_lists: number[];
-    meta: { [key: string]: unknown };
+    meta: { [key: string]: unknown; };
     active_after: null;
     active_before: null;
-    disable_schedule: { [key: string]: unknown };
+    disable_schedule: { [key: string]: unknown; };
     recount_schedule_on: null;
     face_objects: number;
     body_objects: number;
     face_cluster: number | null;
     body_cluster: number | null;
-    links_to_relations: { id: number, name: string, created_date: Date, card: number, relation: number }[];
+    links_to_relations: { id: number, name: string, created_date: Date, card: number, relation: number; }[];
 }
 
 let humanId = 0;
-const humans: { [humanId: number]: Human | undefined } = {};
+const humans: { [humanId: number]: Human | undefined; } = {};
 
-function createHuman({ name }: { name: string }) {
+function createHuman({ name, active }: { name: string; active: boolean; }) {
     humanId++;
     const human: Human = {
         "id": humanId,
-        "active": true,
+        "active": active,
         "filled": true,
         "created_date": new Date(),
         "modified_date": new Date(),
