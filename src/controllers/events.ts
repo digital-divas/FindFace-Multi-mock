@@ -72,7 +72,7 @@ interface EventFace {
 }
 
 let eventId = 0;
-const events: { [eventId: number]: EventFace | undefined; } = {};
+const events: { [eventId: string]: EventFace | undefined; } = {};
 
 function createEvent({ created_date, camera }: { created_date?: string; camera: number; }) {
     eventId++;
@@ -107,7 +107,7 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         acknowledged_by: 0,
         acknowledged_reaction: "",
         cluster_confidence: 0.0,
-        confidence: 0.0,
+        confidence: (Math.random() * 0.45) + 0.5,
         external_detector: true,
         looks_like_confidence: null,
         matched_lists: [watchLists[0].id],
@@ -168,4 +168,14 @@ function getEvent(eventId: number) {
     return events[eventId];
 }
 
-export { createEvent, getEvent };
+function resetEvents() {
+    for (const eventId of Object.keys(events)) {
+        delete events[eventId];
+    }
+}
+
+function getEvents() {
+    return Object.values(events);
+}
+
+export { createEvent, getEvent, resetEvents, getEvents };
