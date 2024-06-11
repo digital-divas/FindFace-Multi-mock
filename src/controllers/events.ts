@@ -46,7 +46,7 @@ interface EventFace {
     external_detector: boolean,
     meta: object,
     id: string,
-    looks_like_confidence: null,
+    looks_like_confidence: number | null,
     matched_lists: number[],
     detector_params: {
         quality: number,
@@ -175,7 +175,11 @@ function resetEvents() {
 }
 
 function getEvents() {
-    return Object.values(events);
+    return Object.values(events).forEach(event => {
+        if (event) {
+            event.looks_like_confidence = event.confidence;
+        }
+    });
 }
 
 export { createEvent, getEvent, resetEvents, getEvents };
