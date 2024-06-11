@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
-import { createEvent, getEvent } from '../controllers/events';
+import { createEvent, getEvent, getEvents } from '../controllers/events';
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -111,10 +111,12 @@ function loadEventsRoutes(app: Express) {
     });
 
     app.get('/events/faces/', validAuthorization, async (req: Request, res: Response) => {
+        const events = getEvents();
+
         return res.status(200).json({
             "next_page": null,
-            "count": 0,
-            "results": []
+            "count": events.length,
+            "results": events
         });
     });
 }
