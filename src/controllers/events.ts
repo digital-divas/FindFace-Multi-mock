@@ -175,11 +175,15 @@ function resetEvents() {
 }
 
 function getEvents() {
-    return Object.values(events).forEach(event => {
+
+    const eventList = Object.values(events);
+    for (const event of eventList) {
         if (event) {
             event.looks_like_confidence = event.confidence;
         }
-    });
+    }
+
+    return eventList;
 }
 
 export { createEvent, getEvent, resetEvents, getEvents };
