@@ -1,4 +1,4 @@
-import { WatchList, watchLists } from "./watch-lists";
+import { WatchList, getWatchLists } from "./watch-lists";
 
 function randomCharacters(length: number) {
     let result = '';
@@ -110,7 +110,7 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         confidence: (Math.random() * 0.45) + 0.5,
         external_detector: true,
         looks_like_confidence: null,
-        matched_lists: [watchLists[0].id],
+        matched_lists: [getWatchLists()[0].id],
         meta: {},
         quality: 0.79995,
         video_archive: null,
@@ -154,7 +154,7 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
                 id: null
             }
         },
-        verbose_matched_lists: [watchLists[0]],
+        verbose_matched_lists: [getWatchLists()[0]],
         // TODO: once camera is implemented, bring it here
         verbose_camera: {},
         // TODO: once camera group is implemented, bring it here

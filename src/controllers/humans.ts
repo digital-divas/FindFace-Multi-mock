@@ -24,7 +24,7 @@ interface Human {
 let humanId = 0;
 const humans: { [humanId: number]: Human | undefined; } = {};
 
-function createHuman({ name, active }: { name: string; active: boolean; }) {
+function createHuman({ name, active, watchLists }: { name: string; active: boolean; watchLists: number[]; }) {
     humanId++;
     const human: Human = {
         "id": humanId,
@@ -34,9 +34,7 @@ function createHuman({ name, active }: { name: string; active: boolean; }) {
         "modified_date": new Date(),
         "name": name,
         "comment": "",
-        "watch_lists": [
-            1
-        ],
+        "watch_lists": watchLists,
         "meta": {},
         "active_after": null,
         "active_before": null,
