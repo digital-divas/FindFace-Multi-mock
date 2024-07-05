@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { agent } from 'supertest';
 
 import { webService } from '../src/services/web-service';
+import { WatchList } from '../src/controllers/watch-lists';
 
 const request = agent(webService.app);
 
@@ -26,5 +27,22 @@ describe('Watch Lists Route Testing', async () => {
     it('test get watch lists', async () => {
         const res = await request.get(`/watch-lists/`).set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
+    });
+
+    it('test create watch lists', async () => {
+        let res;
+        res = await request.post(`/watch-lists/`)
+            .set('Authorization', 'Token ' + token)
+            .send({
+                name: 'Company 1'
+            })
+            .type('application/json');
+        expect(res.statusCode).to.be.equal(200);
+
+        res = await request.get(`/watch-lists/`).set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(200);
+
+        const names = res.body.results.map((wl: WatchList) => wl.name);
+        expect(names).to.includes('Company 1');
     });
 });
