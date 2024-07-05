@@ -39,16 +39,13 @@ function loadCardRoutes(app: Express) {
             watchLists = [req.body.watch_lists];
         }
 
-        const watchListsIds = getWatchLists().map(wl => wl.id);
+        const watchListsIds = getWatchLists().filter(wl => wl.id != -1).map(wl => wl.id);
 
         for (const watchList of watchLists) {
 
             if (!watchListsIds.includes(watchList)) {
-                const missingPermissions = watchLists
-                    .filter((v: string | number) => !(watchListsIds.includes(Number(v))))
-                    .map((v: string | number) => `Watch list(${v}) - view`);
 
-                if (missingPermissions.length == 0) {
+                if (watchList == -1) {
                     return res.status(400).json({
                         "traceback": "",
                         "code": "BAD_PARAM",
@@ -56,6 +53,10 @@ function loadCardRoutes(app: Express) {
                         "param": "watch_lists"
                     });
                 }
+
+                const missingPermissions = watchLists
+                    .filter((v: string | number) => !(watchListsIds.includes(Number(v))))
+                    .map((v: string | number) => `Watch list(${v}) - view`);
 
                 return res.status(403).json({
                     "traceback": "",
