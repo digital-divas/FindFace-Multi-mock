@@ -41,18 +41,18 @@ function loadCardRoutes(app: Express) {
 
         const watchListsIds = getWatchLists().filter(wl => wl.id != -1).map(wl => wl.id);
 
+        if (watchLists.includes(-1)) {
+            return res.status(400).json({
+                "traceback": "",
+                "code": "BAD_PARAM",
+                "desc": "You can't add watch list \"Unmatched\" to a card",
+                "param": "watch_lists"
+            });
+        }
+
         for (const watchList of watchLists) {
 
             if (!watchListsIds.includes(watchList)) {
-
-                if (watchList == -1) {
-                    return res.status(400).json({
-                        "traceback": "",
-                        "code": "BAD_PARAM",
-                        "desc": "You can't add watch list \"Unmatched\" to a card",
-                        "param": "watch_lists"
-                    });
-                }
 
                 const missingPermissions = watchLists
                     .filter((v: string | number) => !(watchListsIds.includes(Number(v))))
