@@ -21,6 +21,8 @@ interface WatchList {
     origin: "ffsecurity";
 }
 
+let watchListId = 1;
+
 const watchLists: WatchList[] = [
     {
         "id": -1,
@@ -68,4 +70,45 @@ const watchLists: WatchList[] = [
     }
 ];
 
-export { watchLists, WatchList };
+function getWatchLists() {
+    return watchLists;
+}
+
+function createWatchList(name: string) {
+    watchListId++;
+    const watchList: WatchList = {
+        "id": watchListId,
+        "created_date": new Date().toISOString(),
+        "modified_date": new Date().toISOString(),
+        "active": true,
+        "name": name,
+        "comment": "",
+        "color": "123456",
+        "notify": false,
+        "acknowledge": false,
+        "camera_groups": [],
+        "face_threshold": null,
+        "body_threshold": null,
+        "car_threshold": null,
+        "ignore_events": false,
+        "send_events_to_external_vms": false,
+        "active_after": null,
+        "active_before": null,
+        "disable_schedule": {},
+        "recount_schedule_on": null,
+        "origin": "ffsecurity"
+    };
+    watchLists.push(watchList);
+
+    return watchList;
+}
+
+function getWatchList(id: number) {
+    const filteredWatchLists = watchLists.filter(watchList => watchList.id == id);
+    if (filteredWatchLists.length) {
+        return filteredWatchLists[0];
+    }
+    return null;
+}
+
+export { createWatchList, getWatchLists, getWatchList, WatchList };

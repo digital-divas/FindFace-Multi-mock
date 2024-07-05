@@ -1,6 +1,7 @@
 import { Express, Request, Response } from 'express';
 import { validAuthorization } from '../services/route_middlewares';
 import { createHuman, deleteHuman, getHuman } from '../controllers/humans';
+import { getWatchLists } from '../controllers/watch-lists';
 
 function loadCardRoutes(app: Express) {
 
@@ -38,32 +39,38 @@ function loadCardRoutes(app: Express) {
             watchLists = [req.body.watch_lists];
         }
 
+        const watchListsIds = getWatchLists().map(wl => wl.id);
 
-        if (watchLists != 1 || Number(watchLists[0]) != 1) {
-            const missingPermissions = watchLists
-                .filter((v: string | number) => !([1, -1].includes(Number(v))))
-                .map((v: string | number) => `Watch list(${v}) - view`);
+        for (const watchList of watchLists) {
 
-            if (missingPermissions.length == 0) {
-                return res.status(400).json({
+            if (!watchListsIds.includes(watchList)) {
+                const missingPermissions = watchLists
+                    .filter((v: string | number) => !(watchListsIds.includes(Number(v))))
+                    .map((v: string | number) => `Watch list(${v}) - view`);
+
+                if (missingPermissions.length == 0) {
+                    return res.status(400).json({
+                        "traceback": "",
+                        "code": "BAD_PARAM",
+                        "desc": "You can't add watch list \"Unmatched\" to a card",
+                        "param": "watch_lists"
+                    });
+                }
+
+                return res.status(403).json({
                     "traceback": "",
-                    "code": "BAD_PARAM",
-                    "desc": "You can't add watch list \"Unmatched\" to a card",
-                    "param": "watch_lists"
+                    "code": "PERMISSION_DENIED",
+                    "desc": "Permission denied",
+                    "missing_permissions": missingPermissions
                 });
             }
 
-            return res.status(403).json({
-                "traceback": "",
-                "code": "PERMISSION_DENIED",
-                "desc": "Permission denied",
-                "missing_permissions": missingPermissions
-            });
         }
 
         const human = createHuman({
             name: req.body.name,
-            active: req.body.active ?? true
+            active: req.body.active ?? true,
+            watchLists
         });
 
         return res.status(200).json(human);
