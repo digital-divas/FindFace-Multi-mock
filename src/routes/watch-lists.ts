@@ -23,7 +23,7 @@ function loadWatchListsRoutes(app: Express) {
 
         const watchList = createWatchList(req.body.name);
 
-        return res.status(200).json(watchList);
+        return res.status(201).json(watchList);
     });
 
 }

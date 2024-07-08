@@ -37,7 +37,7 @@ describe('Watch Lists Route Testing', async () => {
                 name: 'Company 1'
             })
             .type('application/json');
-        expect(res.statusCode).to.be.equal(200);
+        expect(res.statusCode).to.be.equal(201);
 
         res = await request.get(`/watch-lists/`).set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
