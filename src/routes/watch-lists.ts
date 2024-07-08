@@ -21,9 +21,9 @@ function loadWatchListsRoutes(app: Express) {
             });
         }
 
-        const watchList = createWatchList(req.body.name);
+        const watchList = createWatchList(req.body.name, req.body.active === true);
 
-        return res.status(200).json(watchList);
+        return res.status(201).json(watchList);
     });
 
 }

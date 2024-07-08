@@ -74,13 +74,13 @@ function getWatchLists() {
     return watchLists;
 }
 
-function createWatchList(name: string) {
+function createWatchList(name: string, active: boolean) {
     watchListId++;
     const watchList: WatchList = {
         "id": watchListId,
         "created_date": new Date().toISOString(),
         "modified_date": new Date().toISOString(),
-        "active": true,
+        "active": active,
         "name": name,
         "comment": "",
         "color": "123456",
