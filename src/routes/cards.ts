@@ -39,8 +39,6 @@ function loadCardRoutes(app: Express) {
             watchLists = [req.body.watch_lists];
         }
 
-        const watchListsIds = getWatchLists().filter(wl => wl.id != -1).map(wl => wl.id);
-
         if (watchLists.includes(-1)) {
             return res.status(400).json({
                 "traceback": "",
@@ -49,6 +47,8 @@ function loadCardRoutes(app: Express) {
                 "param": "watch_lists"
             });
         }
+
+        const watchListsIds = getWatchLists().filter(wl => wl.id != -1).map(wl => wl.id);
 
         for (const watchList of watchLists) {
 

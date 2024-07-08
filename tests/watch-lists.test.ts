@@ -34,10 +34,11 @@ describe('Watch Lists Route Testing', async () => {
         res = await request.post(`/watch-lists/`)
             .set('Authorization', 'Token ' + token)
             .send({
-                name: 'Company 1'
+                name: 'Company 1',
+                active: true
             })
             .type('application/json');
-        expect(res.statusCode).to.be.equal(200);
+        expect(res.statusCode).to.be.equal(201);
 
         res = await request.get(`/watch-lists/`).set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
