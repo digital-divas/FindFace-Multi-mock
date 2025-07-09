@@ -16,7 +16,7 @@ describe('Auth Route Testing', async () => {
             .type('application/json');
 
         expect(res.statusCode).equals(200);
-        expect(res.body.token).to.not.be.null;
+        expect(res.body.token).to.not.be.undefined;
     });
 
     it('test login route without uuid body', async () => {

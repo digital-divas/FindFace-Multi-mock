@@ -1,6 +1,12 @@
 interface WatchList {
     id: number,
+    /**
+     * A String containing a date on ISO format
+     */
     created_date: string,
+    /**
+     * A String containing a date on ISO format
+     */
     modified_date: string,
     active: boolean,
     name: string,
@@ -26,8 +32,8 @@ let watchListId = 1;
 const watchLists: WatchList[] = [
     {
         'id': -1,
-        'created_date': '2023-09-02T15:49:23.312899Z',
-        'modified_date': '2023-09-02T15:49:23.312914Z',
+        'created_date': new Date().toISOString(),
+        'modified_date': new Date().toISOString(),
         'active': true,
         'name': 'Unmatched',
         'comment': 'Default list for unmatched events',
@@ -48,8 +54,8 @@ const watchLists: WatchList[] = [
     },
     {
         'id': 1,
-        'created_date': '2023-09-02T15:49:23.306322Z',
-        'modified_date': '2023-09-02T15:49:23.306413Z',
+        'created_date': new Date().toISOString(),
+        'modified_date': new Date().toISOString(),
         'active': true,
         'name': 'Default Watch List',
         'comment': '',

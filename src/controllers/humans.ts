@@ -4,8 +4,14 @@ interface Human {
     id: number;
     active: boolean;
     filled: boolean;
-    created_date: Date;
-    modified_date: Date;
+    /**
+     * A String containing a date on ISO format
+     */
+    created_date: string;
+    /**
+     * A String containing a date on ISO format
+     */
+    modified_date: string;
     name: string;
     comment: string;
     watch_lists: number[];
@@ -30,8 +36,8 @@ function createHuman({ name, active, watchLists }: { name: string; active: boole
         'id': humanId,
         'active': active,
         'filled': true,
-        'created_date': new Date(),
-        'modified_date': new Date(),
+        'created_date': new Date().toISOString(),
+        'modified_date': new Date().toISOString(),
         'name': name,
         'comment': '',
         'watch_lists': watchLists,

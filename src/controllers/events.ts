@@ -23,6 +23,9 @@ interface EventFace {
     matched_cluster: null,
     matched_card: null,
     temperature: null,
+    /**
+     * A String containing a date on ISO format
+     */
     created_date: string,
     camera: number,
     camera_group: number,

@@ -21,14 +21,14 @@ describe('Objects Route Testing', async () => {
             .type('application/json');
 
         expect(res.statusCode).equals(200);
-        expect(res.body.token).to.not.be.null;
+        expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
 
         res = await request.post(`/cards/humans/`)
             .send({ name: 'zéca', watch_lists: 1 })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
         humanId = res.body.id;
     });
 
@@ -44,7 +44,7 @@ describe('Objects Route Testing', async () => {
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(201);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
         const faceId = res.body.id;
 
         res = await request.delete(`/objects/faces/${faceId}/`)
@@ -59,7 +59,7 @@ describe('Objects Route Testing', async () => {
             .send({ name: 'another human', watch_lists: 1 })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
         const anotherHuman = res.body.id;
 
         const file = await readFile(__dirname + '/assets/11296869.jpg');
@@ -72,7 +72,7 @@ describe('Objects Route Testing', async () => {
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(201);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
 
         res = await request.delete(`/cards/humans/${anotherHuman}/`)
             .set('Authorization', 'Token ' + token);

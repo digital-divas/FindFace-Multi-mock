@@ -1,121 +1,80 @@
 import { Express, Request, Response } from 'express';
 import { validAuthorization } from '../services/route_middlewares';
-import { createEvent, getEvent, getEvents } from '../controllers/events';
+import { CameraController } from '../controllers/cameras';
 
 function loadCameraRoutes(app: Express) {
 
     app.post('/cameras/', validAuthorization, async (req: Request, res: Response) => {
-
-
-
-        if (!('token' in req.body)) {
+        if (!('group' in req.body)) {
             return res.status(400).json({
                 'traceback': '',
                 'code': 'BAD_PARAM',
                 'desc': 'This field is required.',
-                'param': 'token'
+                'param': 'group'
             });
         }
 
-        if (!('camera' in req.body)) {
+        if (req.body.group !== 1) {
+            return res.status(400).json({
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': `Invalid pk "${req.body.group}" - object does not exist.`,
+                'param': 'group'
+            });
+        }
+
+        if (!('name' in req.body)) {
             return res.status(400).json({
                 'traceback': '',
                 'code': 'BAD_PARAM',
                 'desc': 'This field is required.',
-                'param': 'camera'
+                'param': 'name'
             });
         }
 
-        if (!('mf_selector' in req.body)) {
+        if (!('external_detector' in req.body) || !req.body.external_detector) {
             return res.status(400).json({
                 'traceback': '',
-                'code': 'BAD_PARAM',
-                'desc': 'This field is required.',
-                'param': 'mf_selector'
+                'code': 'emulator_param_error',
+                'desc': 'the emulator is only accepting external detectors for now. so make sure to create the camera using this parameter and the value `true`.',
+                'param': 'external_detector'
             });
         }
 
-        const fullframe = req.file;
+        const camera = CameraController.create({ name: req.body.name, group: req.body.group });
 
-        if (!fullframe) {
-            return res.status(400).json({
-                'traceback': '',
-                'code': 'BAD_PARAM',
-                'desc': 'No file was submitted.',
-                'param': 'fullframe'
-            });
-        }
+        return res.status(201).json(camera);
 
-        // TODO: implement token validation
-        // return res.status(403).json({
-        //     "traceback": "",
-        //     "code": "PERMISSION_DENIED",
-        //     "desc": "Incorrect events creation API token"
-        // });
-
-        // TODO: implement camera_id validation
-        // return res.status(400).json({
-        //     "traceback": "",
-        //     "code": "BAD_PARAM",
-        //     "desc": `Invalid pk "${req.body.camera}" - object does not exist.`,
-        //     "param": "camera"
-        // });
-
-        // TODO: implement no face on fullframe
-        // return res.status(200).json({
-        //     "orientation": 1,
-        //     "objects": {
-        //     }
-        // });
-
-        const eventFace = createEvent({
-            camera: req.body.camera,
-            created_date: req.body.timestamp
-        });
-
-        return res.status(200).json({
-            'events': [
-                eventFace.id
-            ],
-            'errors': []
-        });
     });
 
-    app.get('/events/faces/:id/', validAuthorization, async (req: Request, res: Response) => {
-        const eventId = Number(req.params.id);
-        if (Number.isNaN(eventId)) {
-            return res.status(400).json({
-                code: 'BAD_PARAM',
-                desc: 'ID must be a positive integer.'
-            });
-        }
-        if (eventId < 1) {
-            return res.status(400).json({
-                code: 'BAD_PARAM',
-                desc: 'ID must be non-zero uint64 number.'
-            });
-        }
+    app.get('/cameras/', validAuthorization, async (req: Request, res: Response) => {
 
-        const event = getEvent(eventId);
-        if (!event) {
+        const cameras = CameraController.list();
+
+        return res.status(200).json({
+            next_page: null,
+            prev_page: null,
+            results: cameras,
+        });
+
+    });
+
+    app.delete('/cameras/:id/', validAuthorization, async (req: Request, res: Response) => {
+        const cameraId = Number(req.params.id);
+        const camera = CameraController.get(cameraId);
+
+        if (!camera) {
             return res.status(404).json({
                 code: 'NOT_FOUND',
-                desc: 'No FaceEvent matches the given query.'
+                desc: 'No Camera matches the given query.',
             });
         }
 
-        return res.status(200).json(event);
+        CameraController.delete(cameraId);
+        return res.status(204).send();
+
     });
 
-    app.get('/events/faces/', validAuthorization, async (req: Request, res: Response) => {
-        const events = getEvents();
-
-        return res.status(200).json({
-            'next_page': null,
-            'count': events.length,
-            'results': events
-        });
-    });
 }
 
 export { loadCameraRoutes };

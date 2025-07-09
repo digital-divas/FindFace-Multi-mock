@@ -8,6 +8,7 @@ import { loadSessionsRoutes } from '../routes/sessions';
 import { loadWatchListsRoutes } from '../routes/watch-lists';
 import { loadObjectsRoutes } from '../routes/objects';
 import { loadEventsRoutes } from '../routes/events';
+import { loadCameraRoutes } from '../routes/cameras';
 
 interface WebService {
     port: string;
@@ -31,6 +32,7 @@ class WebService {
         loadWatchListsRoutes(this.app);
         loadObjectsRoutes(this.app);
         loadEventsRoutes(this.app);
+        loadCameraRoutes(this.app);
 
         this.app.get('/', (req: Request, res: Response) => {
             res.status(200).send('OK');

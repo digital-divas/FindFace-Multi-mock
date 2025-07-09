@@ -22,7 +22,7 @@ describe('Events Route Testing', async () => {
             .type('application/json');
 
         expect(res.statusCode).equals(200);
-        expect(res.body.token).to.not.be.null;
+        expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
 
         const file = await readFile(__dirname + '/assets/11296869.jpg');
@@ -45,7 +45,7 @@ describe('Events Route Testing', async () => {
 
         expect(res.statusCode).equals(200);
         expect(res.body.objects.face).has.lengthOf(1);
-        expect(res.body.objects.face[0].id).to.not.be.null;
+        expect(res.body.objects.face[0].id).to.not.be.undefined;
         detectionId = res.body.objects.face[0].id;
     });
 

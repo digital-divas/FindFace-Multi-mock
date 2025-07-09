@@ -2,8 +2,14 @@
 interface Face {
     id: string;
     card: number;
-    created_date: Date;
-    modified_date: Date;
+    /**
+     * A String containing a date on ISO format
+     */
+    created_date: string;
+    /**
+     * A String containing a date on ISO format
+     */
+    modified_date: string;
     source_photo_name: string;
     source_photo: string;
     thumbnail: string;
@@ -12,13 +18,13 @@ interface Face {
     frame_coords_right: number;
     frame_coords_bottom: number;
     active: boolean;
-    features: { [key: string]: unknown };
-    meta: { [key: string]: unknown };
+    features: { [key: string]: unknown; };
+    meta: { [key: string]: unknown; };
 }
 
-const faces: { [faceId: string]: Face | undefined } = {};
+const faces: { [faceId: string]: Face | undefined; } = {};
 
-function makeid(length: number) {
+function makeId(length: number) {
     let result = '';
     const characters = '0123456789';
     const charactersLength = characters.length;
@@ -45,12 +51,12 @@ function randomCharacters(length: number) {
 
 function createFace(humanId: number, photo: Express.Multer.File) {
 
-    const faceId = makeid(19);
+    const faceId = makeId(19);
 
     const face: Face = {
         'card': humanId,
-        'created_date': new Date(),
-        'modified_date': new Date(),
+        'created_date': new Date().toISOString(),
+        'modified_date': new Date().toISOString(),
         'source_photo_name': photo.originalname,
         'source_photo': `http://localhost:5000/uploads/cards/xP/${humanId}/face_${photo.originalname}_${randomCharacters(6)}.jpeg`,
         'thumbnail': `http://localhost:5000/uploads/cards/cK/${humanId}/face_${photo.originalname}_thumbnail_${randomCharacters(6)}.jpeg`,

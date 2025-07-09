@@ -21,7 +21,7 @@ describe('Cards Route Testing', async () => {
             .type('application/json');
 
         expect(res.statusCode).equals(200);
-        expect(res.body.token).to.not.be.null;
+        expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
 
         const file = await readFile(__dirname + '/assets/11296869.jpg');
@@ -43,7 +43,7 @@ describe('Cards Route Testing', async () => {
             .set('Authorization', 'Token ' + token);
 
         expect(res.statusCode).equals(200);
-        expect(res.body.objects.face[0].id).to.not.be.null;
+        expect(res.body.objects.face[0].id).to.not.be.undefined;
         detectionId = res.body.objects.face[0].id;
     });
 
@@ -63,7 +63,7 @@ describe('Cards Route Testing', async () => {
             .send({ name: 'zéca', watch_lists: 1 })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
         const humanId = res.body.id;
 
         // update
@@ -71,13 +71,13 @@ describe('Cards Route Testing', async () => {
             .send({ name: 'zéca editado' })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
 
         // patch without changes should be okay too
         res = await request.patch(`/cards/humans/${humanId}/`)
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body.id).to.not.be.null;
+        expect(res.body.id).to.not.be.undefined;
 
         // delete
         res = await request.delete(`/cards/humans/${humanId}/`)

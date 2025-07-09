@@ -2,12 +2,16 @@
     "cSpell.words": [
         "abcdefghijklmnopqrstuvxyz",
         "authtoken",
+        "bboxes",
         "deviceblacklistrecord",
         "ffsecurity",
         "fullframe",
         "headpose",
+        "imotion",
         "medmask",
+        "onvif",
         "traceback",
-        "userkeyvalue"
+        "userkeyvalue",
+        "Videomanager"
     ]
 }
