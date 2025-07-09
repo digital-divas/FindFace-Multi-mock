@@ -8,24 +8,24 @@ const request = agent(webService.app);
 
 describe('Detect Route Testing', async () => {
 
-    let token = "";
+    let token = '';
 
     before(async () => {
         const res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`admin:admin`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
         expect(res.statusCode).equals(200);
-        expect(res.body.token).to.not.be.null;
+        expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
     });
 
     it('detect object on image', async () => {
 
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -37,7 +37,7 @@ describe('Detect Route Testing', async () => {
                     medmask: false
                 }
             }))
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             })
@@ -49,7 +49,7 @@ describe('Detect Route Testing', async () => {
 
     it('detect without token', async () => {
 
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -61,20 +61,20 @@ describe('Detect Route Testing', async () => {
                     medmask: false
                 }
             }))
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             });
 
         expect(res.statusCode).equals(401);
-        expect(res.body.code).equals("UNAUTHORIZED");
-        expect(res.body.desc).equals("Authentication credentials were not provided.");
+        expect(res.body.code).equals('UNAUTHORIZED');
+        expect(res.body.desc).equals('Authentication credentials were not provided.');
 
     });
 
     it('detect invalid token', async () => {
 
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -86,23 +86,23 @@ describe('Detect Route Testing', async () => {
                     medmask: false
                 }
             }))
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             })
             .set('Authorization', 'Token abc');
 
         expect(res.statusCode).equals(401);
-        expect(res.body.code).equals("UNAUTHORIZED");
-        expect(res.body.desc).equals("Invalid token.");
+        expect(res.body.code).equals('UNAUTHORIZED');
+        expect(res.body.desc).equals('Invalid token.');
 
     });
 
     it('no attributes on request', async () => {
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             })

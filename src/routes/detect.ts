@@ -14,19 +14,19 @@ function loadDetectRoutes(app: Express) {
 
         if (!('attributes' in req.body)) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field is required.",
-                "param": "attributes"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field is required.',
+                'param': 'attributes'
             });
         }
 
         if (!photo) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field may not be null.",
-                "param": "photo"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field may not be null.',
+                'param': 'photo'
             });
         }
 
@@ -38,20 +38,20 @@ function loadDetectRoutes(app: Express) {
         // });
 
         return res.status(200).json({
-            "orientation": 1,
-            "objects": {
-                "face": [
+            'orientation': 1,
+            'objects': {
+                'face': [
                     {
-                        "id": "cj98gtt45oepj7no3h7g",
-                        "bbox": {
-                            "left": 0,
-                            "top": 0,
-                            "right": 100,
-                            "bottom": 100
+                        'id': 'cj98gtt45oepj7no3h7g',
+                        'bbox': {
+                            'left': 0,
+                            'top': 0,
+                            'right': 100,
+                            'bottom': 100
                         },
-                        "detection_score": 0.94990854,
-                        "low_quality": false,
-                        "features": {}
+                        'detection_score': 0.94990854,
+                        'low_quality': false,
+                        'features': {}
                     }
                 ]
             }

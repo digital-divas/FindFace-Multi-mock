@@ -6,7 +6,7 @@ function loadWatchListsRoutes(app: Express) {
 
     app.get('/watch-lists/', validAuthorization, async (req: Request, res: Response) => {
         return res.status(200).json({
-            "results": getWatchLists()
+            'results': getWatchLists()
         });
 
     });
@@ -14,10 +14,10 @@ function loadWatchListsRoutes(app: Express) {
     app.post('/watch-lists/', validAuthorization, async (req: Request, res: Response) => {
         if (!req.body.name) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field is required.",
-                "param": "name"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field is required.',
+                'param': 'name'
             });
         }
 

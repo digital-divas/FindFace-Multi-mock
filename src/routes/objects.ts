@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
-import { getHuman } from '../controllers/humans';
+import { HumanController } from '../controllers/humans';
 import { createFace, deleteFace, getFace } from '../controllers/faces';
 
 const upload = multer({
@@ -14,30 +14,30 @@ function loadObjectsRoutes(app: Express) {
 
         if (!req.body.card) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field is required.",
-                "param": "card"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field is required.',
+                'param': 'card'
             });
         }
 
-        const human = getHuman(Number(req.body.card));
+        const human = HumanController.get(Number(req.body.card));
 
         if (!human) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": `Invalid pk "${req.body.card}" - object does not exist.`,
-                "param": "card"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': `Invalid pk "${req.body.card}" - object does not exist.`,
+                'param': 'card'
             });
         }
 
         if (!source_photo) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "source_photo must be provided",
-                "param": "source_photo"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'source_photo must be provided',
+                'param': 'source_photo'
             });
         }
 
@@ -68,9 +68,9 @@ function loadObjectsRoutes(app: Express) {
 
         if (!face) {
             return res.status(404).json({
-                "traceback": "",
-                "code": "NOT_FOUND",
-                "desc": "No FaceObject matches the given query."
+                'traceback': '',
+                'code': 'NOT_FOUND',
+                'desc': 'No FaceObject matches the given query.'
             });
         }
 

@@ -1,4 +1,4 @@
-import { WatchList, getWatchLists } from "./watch-lists";
+import { WatchList, getWatchLists } from './watch-lists';
 
 function randomCharacters(length: number) {
     let result = '';
@@ -23,13 +23,16 @@ interface EventFace {
     matched_cluster: null,
     matched_card: null,
     temperature: null,
+    /**
+     * A String containing a date on ISO format
+     */
     created_date: string,
     camera: number,
     camera_group: number,
     case: null,
     thumbnail: string,
     fullframe: string,
-    bs_type: "overall",
+    bs_type: 'overall',
     frame_coords_left: number,
     frame_coords_top: number,
     frame_coords_right: number,
@@ -92,12 +95,12 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         camera_group: 1,
         thumbnail: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_thumbnail_${randomCharacters(6)}.jpg`,
         fullframe: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_full_frame_${randomCharacters(6)}.jpg`,
-        matched_object: "",
+        matched_object: '',
         matched_cluster: null,
         matched_card: null,
         temperature: null,
         case: null,
-        bs_type: "overall",
+        bs_type: 'overall',
         frame_coords_left: 11,
         frame_coords_top: 21,
         frame_coords_right: 62,
@@ -105,7 +108,7 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         matched: false,
         acknowledged: true,
         acknowledged_by: 0,
-        acknowledged_reaction: "",
+        acknowledged_reaction: '',
         cluster_confidence: 0.0,
         confidence: (Math.random() * 0.45) + 0.5,
         external_detector: true,
@@ -124,11 +127,11 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
                 confidence: 1
             },
             beard: {
-                name: "beard",
+                name: 'beard',
                 confidence: 0.894003
             },
             glasses: {
-                name: "none",
+                name: 'none',
                 confidence: 0.988431
             },
             age: {
@@ -136,15 +139,15 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
                 confidence: 1
             },
             gender: {
-                name: "male",
+                name: 'male',
                 confidence: 0.999998
             },
             medmask: {
-                name: "none",
+                name: 'none',
                 confidence: 0.999999
             },
             emotions: {
-                name: "neutral",
+                name: 'neutral',
                 confidence: 0.97469
             }
         },
@@ -174,16 +177,45 @@ function resetEvents() {
     }
 }
 
-function getEvents() {
+function getEvents(params: {
+    looks_like?: string;
+    page: number;
+    limit: number;
+    ordering?: string;
+    threshold?: number;
+    /**
+     * cameras is as string representing a list of camera id joined by a comma. Example: "1,2,3"
+     */
+    cameras?: string;
+}) {
+    const offset = params.page * params.limit;
 
     const eventList = Object.values(events);
+
+    // most recent first
+    eventList.sort((a, b) => {
+        const aCreatedDate = a?.created_date ? new Date(a?.created_date).getTime() : new Date().getTime();
+        const bCreatedDate = b?.created_date ? new Date(b?.created_date).getTime() : new Date().getTime();
+
+        return bCreatedDate - aCreatedDate;
+    });
+
     for (const event of eventList) {
         if (event) {
             event.looks_like_confidence = event.confidence;
         }
     }
 
-    return eventList;
+    return eventList.filter((event) => {
+        if (!event) {
+            return false;
+        }
+        if (params.cameras) {
+            const cameras = params.cameras.split(',').map(each => Number(each));
+            return cameras.includes(event.camera);
+        }
+        return true;
+    }).slice(offset, offset + params.limit);
 }
 
 export { createEvent, getEvent, resetEvents, getEvents };
