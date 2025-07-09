@@ -177,16 +177,45 @@ function resetEvents() {
     }
 }
 
-function getEvents() {
+function getEvents(params: {
+    looks_like?: string;
+    page: number;
+    limit: number;
+    ordering?: string;
+    threshold?: number;
+    /**
+     * cameras is as string representing a list of camera id joined by a comma. Example: "1,2,3"
+     */
+    cameras?: string;
+}) {
+    const offset = params.page * params.limit;
 
     const eventList = Object.values(events);
+
+    // most recent first
+    eventList.sort((a, b) => {
+        const aCreatedDate = a?.created_date ? new Date(a?.created_date).getTime() : new Date().getTime();
+        const bCreatedDate = b?.created_date ? new Date(b?.created_date).getTime() : new Date().getTime();
+
+        return bCreatedDate - aCreatedDate;
+    });
+
     for (const event of eventList) {
         if (event) {
             event.looks_like_confidence = event.confidence;
         }
     }
 
-    return eventList;
+    return eventList.filter((event) => {
+        if (!event) {
+            return false;
+        }
+        if (params.cameras) {
+            const cameras = params.cameras.split(',').map(each => Number(each));
+            return cameras.includes(event.camera);
+        }
+        return true;
+    }).slice(offset, offset + params.limit);
 }
 
 export { createEvent, getEvent, resetEvents, getEvents };

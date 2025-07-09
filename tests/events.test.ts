@@ -11,6 +11,8 @@ describe('Events Route Testing', async () => {
 
     let token = '';
     let detectionId = '';
+    let cameraId = 0;
+    let externalDetectorToken = '';
 
     before(async () => {
         let res;
@@ -24,6 +26,21 @@ describe('Events Route Testing', async () => {
         expect(res.statusCode).equals(200);
         expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
+
+        res = await request.post('/cameras/')
+            .set('Authorization', 'Token ' + token)
+            .send({
+                group: 1,
+                name: 'camera name',
+                external_detector: true,
+            })
+            .type('application/json');
+
+        expect(res.statusCode).equals(201);
+        expect(res.body.id).to.not.be.undefined;
+        expect(res.body.external_detector_token).to.not.be.undefined;
+        cameraId = res.body.id;
+        externalDetectorToken = res.body.external_detector_token;
 
         const file = await readFile(__dirname + '/assets/11296869.jpg');
 
@@ -54,6 +71,7 @@ describe('Events Route Testing', async () => {
         const res = await request.get(`/events/faces/`)
             .query({
                 looks_like: 'detection:' + detectionId,
+                cameras: cameraId,
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
@@ -71,8 +89,8 @@ describe('Events Route Testing', async () => {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
-            .field('camera', '1')
+            .field('token', externalDetectorToken)
+            .field('camera', cameraId)
             .field('mf_selector', 'all')
             .field('timestamp', '2023-10-24T16:50:54')
             .set('Authorization', 'Token ' + token);
@@ -85,13 +103,23 @@ describe('Events Route Testing', async () => {
         res = await request.get(`/events/faces/`)
             .query({
                 looks_like: 'detection:' + detectionId,
+                cameras: cameraId,
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
-
         expect(res.body.next_page).to.be.equal(null);
         expect(res.body.count).to.be.equal(1);
         expect(res.body.results[0].id).to.be.equal(createdEventId);
+
+        res = await request.get(`/events/faces/`)
+            .query({
+                looks_like: 'detection:' + detectionId,
+                cameras: '-1',
+            })
+            .set('Authorization', 'Token ' + token);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.next_page).to.be.equal(null);
+        expect(res.body.count).to.be.equal(0);
     });
 
     it('test create event without timestamp', async () => {
@@ -102,8 +130,8 @@ describe('Events Route Testing', async () => {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
-            .field('camera', '1')
+            .field('token', externalDetectorToken)
+            .field('camera', cameraId)
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -114,8 +142,8 @@ describe('Events Route Testing', async () => {
     it('test invalid create event - missing picture', async () => {
 
         const res = await request.post(`/events/faces/add/`)
-            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
-            .field('camera', '1')
+            .field('token', externalDetectorToken)
+            .field('camera', cameraId)
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -131,7 +159,7 @@ describe('Events Route Testing', async () => {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('camera', '1')
+            .field('camera', cameraId)
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -147,7 +175,7 @@ describe('Events Route Testing', async () => {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
+            .field('token', externalDetectorToken)
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -163,12 +191,52 @@ describe('Events Route Testing', async () => {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
-            .field('camera', '1')
+            .field('token', externalDetectorToken)
+            .field('camera', cameraId)
             .set('Authorization', 'Token ' + token);
 
         expect(res.statusCode).to.be.equal(400);
         expect(res.body.code).to.be.equal('BAD_PARAM');
+    });
+
+    it('test invalid camera or token', async () => {
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        let res;
+
+        res = await request.post(`/events/faces/add/`)
+            .attach('fullframe', file, {
+                filename: 'fullframe.jpg',
+                contentType: 'image/jpeg'
+            })
+            .field('token', externalDetectorToken)
+            .field('camera', -1)
+            .field('mf_selector', 'all')
+            .set('Authorization', 'Token ' + token);
+
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body).to.be.deep.equal({
+            traceback: '',
+            code: 'BAD_PARAM',
+            desc: `Invalid pk '-1' - object does not exist.`,
+            param: 'camera'
+        });
+
+        res = await request.post(`/events/faces/add/`)
+            .attach('fullframe', file, {
+                filename: 'fullframe.jpg',
+                contentType: 'image/jpeg'
+            })
+            .field('token', 'invalid token')
+            .field('camera', cameraId)
+            .field('mf_selector', 'all')
+            .set('Authorization', 'Token ' + token);
+
+        expect(res.statusCode).to.be.equal(403);
+        expect(res.body).to.be.deep.equal({
+            traceback: '',
+            code: 'PERMISSION_DENIED',
+            desc: `Incorrect events creation API token`,
+        });
     });
 
 });

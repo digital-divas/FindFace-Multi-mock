@@ -1,15 +1,27 @@
 import { Express, Request, Response } from 'express';
 import { validAuthorization } from '../services/route_middlewares';
-import { createHuman, deleteHuman, getHuman } from '../controllers/humans';
+import { HumanController } from '../controllers/humans';
 import { getWatchLists } from '../controllers/watch-lists';
 
 function loadCardRoutes(app: Express) {
 
     app.get('/cards/humans/', validAuthorization, async (req: Request, res: Response) => {
+        const page: number = Number(req.query.page) || 0;
+        const limit: number = Number(req.query.limit) || 10;
+
+        const humans = HumanController.list({
+            page,
+            limit: limit > 1000 ? 1000 : limit,
+            active: req.query.active ? String(req.query.active) === 'true' : undefined,
+            watch_lists: req.query.watch_lists ? String(req.query.watch_lists) : undefined,
+            looks_like: req.query.looks_like ? String(req.query.looks_like) : undefined,
+            threshold: Number(req.query.threshold) || 0.714,
+        });
+
         return res.status(200).json({
             'next_page': null,
             'prev_page': null,
-            'results': []
+            'results': humans
         });
 
     });
@@ -68,7 +80,7 @@ function loadCardRoutes(app: Express) {
 
         }
 
-        const human = createHuman({
+        const human = HumanController.create({
             name: req.body.name,
             active: req.body.active ?? true,
             watchLists
@@ -80,7 +92,7 @@ function loadCardRoutes(app: Express) {
 
     app.patch('/cards/humans/:humanId/', validAuthorization, async (req: Request, res: Response) => {
 
-        const human = getHuman(Number(req.params.humanId));
+        const human = HumanController.get(Number(req.params.humanId));
 
         if (!human) {
             return res.status(404).json({
@@ -104,7 +116,9 @@ function loadCardRoutes(app: Express) {
 
     app.delete('/cards/humans/:humanId/', validAuthorization, async (req: Request, res: Response) => {
 
-        const human = getHuman(Number(req.params.humanId));
+        const humanId = Number(req.params.humanId);
+
+        const human = HumanController.get(humanId);
 
         if (!human) {
             return res.status(404).json({
@@ -114,7 +128,7 @@ function loadCardRoutes(app: Express) {
             });
         }
 
-        deleteHuman(human.id);
+        HumanController.delete(humanId);
 
         return res.status(204).send();
 

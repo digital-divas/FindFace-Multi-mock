@@ -2,6 +2,7 @@ import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
 import { createEvent, getEvent, getEvents } from '../controllers/events';
+import { CameraController } from '../controllers/cameras';
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -49,30 +50,34 @@ function loadEventsRoutes(app: Express) {
             });
         }
 
-        // TODO: implement token validation
-        // return res.status(403).json({
-        //     "traceback": "",
-        //     "code": "PERMISSION_DENIED",
-        //     "desc": "Incorrect events creation API token"
-        // });
+        const camera = CameraController.get(req.body.camera);
 
-        // TODO: implement camera_id validation
-        // return res.status(400).json({
-        //     "traceback": "",
-        //     "code": "BAD_PARAM",
-        //     "desc": `Invalid pk "${req.body.camera}" - object does not exist.`,
-        //     "param": "camera"
-        // });
+        if (!camera) {
+            return res.status(400).json({
+                traceback: '',
+                code: 'BAD_PARAM',
+                desc: `Invalid pk '${req.body.camera}' - object does not exist.`,
+                param: 'camera'
+            });
+        }
+
+        if (camera.external_detector_token !== req.body.token) {
+            return res.status(403).json({
+                traceback: '',
+                code: 'PERMISSION_DENIED',
+                desc: 'Incorrect events creation API token'
+            });
+        }
 
         // TODO: implement no face on fullframe
         // return res.status(200).json({
-        //     "orientation": 1,
-        //     "objects": {
+        //     'orientation': 1,
+        //     'objects': {
         //     }
         // });
 
         const eventFace = createEvent({
-            camera: req.body.camera,
+            camera: Number(req.body.camera),
             created_date: req.body.timestamp
         });
 
@@ -111,7 +116,14 @@ function loadEventsRoutes(app: Express) {
     });
 
     app.get('/events/faces/', validAuthorization, async (req: Request, res: Response) => {
-        const events = getEvents();
+        const page: number = Number(req.query.page) || 0;
+        const limit: number = Number(req.query.limit) || 10;
+
+        const events = getEvents({
+            page,
+            limit: limit > 1000 ? 1000 : limit,
+            cameras: req.query.cameras ? String(req.query.cameras) : undefined,
+        });
 
         return res.status(200).json({
             'next_page': null,

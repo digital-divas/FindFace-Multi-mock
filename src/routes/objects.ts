@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
-import { getHuman } from '../controllers/humans';
+import { HumanController } from '../controllers/humans';
 import { createFace, deleteFace, getFace } from '../controllers/faces';
 
 const upload = multer({
@@ -21,7 +21,7 @@ function loadObjectsRoutes(app: Express) {
             });
         }
 
-        const human = getHuman(Number(req.body.card));
+        const human = HumanController.get(Number(req.body.card));
 
         if (!human) {
             return res.status(400).json({
