@@ -1,8 +1,13 @@
 {
     "cSpell.words": [
         "abcdefghijklmnopqrstuvxyz",
+        "authtoken",
+        "deviceblacklistrecord",
+        "ffsecurity",
         "fullframe",
+        "headpose",
         "medmask",
-        "traceback"
+        "traceback",
+        "userkeyvalue"
     ]
 }

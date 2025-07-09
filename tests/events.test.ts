@@ -9,15 +9,15 @@ const request = agent(webService.app);
 
 describe('Events Route Testing', async () => {
 
-    let token = "";
-    let detectionId = "";
+    let token = '';
+    let detectionId = '';
 
     before(async () => {
         let res;
         res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`admin:admin`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
@@ -25,7 +25,7 @@ describe('Events Route Testing', async () => {
         expect(res.body.token).to.not.be.null;
         token = res.body.token;
 
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -37,7 +37,7 @@ describe('Events Route Testing', async () => {
                     medmask: false
                 }
             }))
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             })
@@ -53,7 +53,7 @@ describe('Events Route Testing', async () => {
         resetEvents();
         const res = await request.get(`/events/faces/`)
             .query({
-                looks_like: "detection:" + detectionId,
+                looks_like: 'detection:' + detectionId,
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
@@ -64,15 +64,15 @@ describe('Events Route Testing', async () => {
 
     it('test create event with timestamp', async () => {
         resetEvents();
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         let res = await request.post(`/events/faces/add/`)
-            .attach("fullframe", file, {
+            .attach('fullframe', file, {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', "abcdefghijklmnopqrstuvxyz1234567")
-            .field('camera', "camera")
+            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
+            .field('camera', '1')
             .field('mf_selector', 'all')
             .field('timestamp', '2023-10-24T16:50:54')
             .set('Authorization', 'Token ' + token);
@@ -84,7 +84,7 @@ describe('Events Route Testing', async () => {
 
         res = await request.get(`/events/faces/`)
             .query({
-                looks_like: "detection:" + detectionId,
+                looks_like: 'detection:' + detectionId,
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
@@ -95,15 +95,15 @@ describe('Events Route Testing', async () => {
     });
 
     it('test create event without timestamp', async () => {
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
-            .attach("fullframe", file, {
+            .attach('fullframe', file, {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', "abcdefghijklmnopqrstuvxyz1234567")
-            .field('camera', "camera")
+            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
+            .field('camera', '1')
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -114,8 +114,8 @@ describe('Events Route Testing', async () => {
     it('test invalid create event - missing picture', async () => {
 
         const res = await request.post(`/events/faces/add/`)
-            .field('token', "abcdefghijklmnopqrstuvxyz1234567")
-            .field('camera', "camera")
+            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
+            .field('camera', '1')
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -124,14 +124,14 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing token', async () => {
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
-            .attach("fullframe", file, {
+            .attach('fullframe', file, {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('camera', "camera")
+            .field('camera', '1')
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -140,14 +140,14 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing camera', async () => {
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
-            .attach("fullframe", file, {
+            .attach('fullframe', file, {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', "abcdefghijklmnopqrstuvxyz1234567")
+            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
             .field('mf_selector', 'all')
             .set('Authorization', 'Token ' + token);
 
@@ -156,15 +156,15 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing mf_selector', async () => {
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
-            .attach("fullframe", file, {
+            .attach('fullframe', file, {
                 filename: 'fullframe.jpg',
                 contentType: 'image/jpeg'
             })
-            .field('token', "abcdefghijklmnopqrstuvxyz1234567")
-            .field('camera', "camera")
+            .field('token', 'abcdefghijklmnopqrstuvxyz1234567')
+            .field('camera', '1')
             .set('Authorization', 'Token ' + token);
 
         expect(res.statusCode).to.be.equal(400);

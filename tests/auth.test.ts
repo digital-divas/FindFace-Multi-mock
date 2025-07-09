@@ -11,7 +11,7 @@ describe('Auth Route Testing', async () => {
         const res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`admin:admin`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
@@ -25,33 +25,33 @@ describe('Auth Route Testing', async () => {
             .type('application/json');
 
         expect(res.statusCode).equals(400);
-        expect(res.body.code).equals("BAD_PARAM");
-        expect(res.body.desc).equals("This field is required.");
+        expect(res.body.code).equals('BAD_PARAM');
+        expect(res.body.desc).equals('This field is required.');
     });
 
     it('test login route without authorization', async () => {
         const res = await request.post('/auth/login/')
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
         expect(res.statusCode).equals(401);
-        expect(res.body.code).equals("UNAUTHORIZED");
-        expect(res.body.desc).equals("Authentication credentials were not provided.");
+        expect(res.body.code).equals('UNAUTHORIZED');
+        expect(res.body.desc).equals('Authentication credentials were not provided.');
     });
 
     it('test login route wrong user:pass', async () => {
         const res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`aaaaaa:babababa`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
         expect(res.statusCode).equals(401);
-        expect(res.body.code).equals("UNAUTHORIZED");
-        expect(res.body.desc).equals("Invalid username/password.");
+        expect(res.body.code).equals('UNAUTHORIZED');
+        expect(res.body.desc).equals('Invalid username/password.');
     });
 
 });

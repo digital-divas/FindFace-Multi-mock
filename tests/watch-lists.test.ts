@@ -8,13 +8,13 @@ const request = agent(webService.app);
 
 describe('Watch Lists Route Testing', async () => {
 
-    let token = "";
+    let token = '';
 
     before(async () => {
         const res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`admin:admin`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 

@@ -7,9 +7,9 @@ function loadCardRoutes(app: Express) {
 
     app.get('/cards/humans/', validAuthorization, async (req: Request, res: Response) => {
         return res.status(200).json({
-            "next_page": null,
-            "prev_page": null,
-            "results": []
+            'next_page': null,
+            'prev_page': null,
+            'results': []
         });
 
     });
@@ -17,19 +17,19 @@ function loadCardRoutes(app: Express) {
     app.post('/cards/humans/', validAuthorization, async (req: Request, res: Response) => {
         if (!req.body.name) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field is required.",
-                "param": "name"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field is required.',
+                'param': 'name'
             });
         }
 
         if (!req.body.watch_lists) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "This field is required.",
-                "param": "watch_lists"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'This field is required.',
+                'param': 'watch_lists'
             });
         }
 
@@ -41,10 +41,10 @@ function loadCardRoutes(app: Express) {
 
         if (watchLists.includes(-1)) {
             return res.status(400).json({
-                "traceback": "",
-                "code": "BAD_PARAM",
-                "desc": "You can't add watch list \"Unmatched\" to a card",
-                "param": "watch_lists"
+                'traceback': '',
+                'code': 'BAD_PARAM',
+                'desc': 'You can\'t add watch list "Unmatched" to a card',
+                'param': 'watch_lists'
             });
         }
 
@@ -59,10 +59,10 @@ function loadCardRoutes(app: Express) {
                     .map((v: string | number) => `Watch list(${v}) - view`);
 
                 return res.status(403).json({
-                    "traceback": "",
-                    "code": "PERMISSION_DENIED",
-                    "desc": "Permission denied",
-                    "missing_permissions": missingPermissions
+                    'traceback': '',
+                    'code': 'PERMISSION_DENIED',
+                    'desc': 'Permission denied',
+                    'missing_permissions': missingPermissions
                 });
             }
 
@@ -84,9 +84,9 @@ function loadCardRoutes(app: Express) {
 
         if (!human) {
             return res.status(404).json({
-                "traceback": "",
-                "code": "NOT_FOUND",
-                "desc": "No HumanCard matches the given query."
+                'traceback': '',
+                'code': 'NOT_FOUND',
+                'desc': 'No HumanCard matches the given query.'
             });
         }
 
@@ -108,9 +108,9 @@ function loadCardRoutes(app: Express) {
 
         if (!human) {
             return res.status(404).json({
-                "traceback": "",
-                "code": "NOT_FOUND",
-                "desc": "No HumanCard matches the given query."
+                'traceback': '',
+                'code': 'NOT_FOUND',
+                'desc': 'No HumanCard matches the given query.'
             });
         }
 

@@ -8,15 +8,15 @@ const request = agent(webService.app);
 
 describe('Cards Route Testing', async () => {
 
-    let token = "";
-    let detectionId = "";
+    let token = '';
+    let detectionId = '';
 
     before(async () => {
         let res;
         res = await request.post('/auth/login/')
             .set('Authorization', `Basic ${Buffer.from(`admin:admin`).toString('base64')}`)
             .send({
-                "uuid": "anything",
+                'uuid': 'anything',
             })
             .type('application/json');
 
@@ -24,7 +24,7 @@ describe('Cards Route Testing', async () => {
         expect(res.body.token).to.not.be.null;
         token = res.body.token;
 
-        const file = await readFile(__dirname + "/assets/11296869.jpg");
+        const file = await readFile(__dirname + '/assets/11296869.jpg');
 
         res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -36,7 +36,7 @@ describe('Cards Route Testing', async () => {
                     medmask: false
                 }
             }))
-            .attach("photo", file, {
+            .attach('photo', file, {
                 filename: 'photo.jpg',
                 contentType: 'image/jpeg'
             })
@@ -50,7 +50,7 @@ describe('Cards Route Testing', async () => {
     it('test get human by detectionId', async () => {
         const res = await request.get(`/cards/humans/`)
             .query({
-                looks_like: "detection:" + detectionId,
+                looks_like: 'detection:' + detectionId,
             })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
@@ -60,7 +60,7 @@ describe('Cards Route Testing', async () => {
         let res;
         // create
         res = await request.post(`/cards/humans/`)
-            .send({ name: "zéca", watch_lists: 1 })
+            .send({ name: 'zéca', watch_lists: 1 })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
         expect(res.body.id).to.not.be.null;
@@ -68,7 +68,7 @@ describe('Cards Route Testing', async () => {
 
         // update
         res = await request.patch(`/cards/humans/${humanId}/`)
-            .send({ name: "zéca editado" })
+            .send({ name: 'zéca editado' })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(200);
         expect(res.body.id).to.not.be.null;
@@ -120,7 +120,7 @@ describe('Cards Route Testing', async () => {
 
     it('test invalid human update - non existent humanId', async () => {
         const res = await request.patch(`/cards/humans/-1/`)
-            .send({ name: "zéca editado" })
+            .send({ name: 'zéca editado' })
             .set('Authorization', 'Token ' + token);
         expect(res.statusCode).to.be.equal(404);
         expect(res.body.code).to.be.equal('NOT_FOUND');

@@ -48,20 +48,20 @@ function createFace(humanId: number, photo: Express.Multer.File) {
     const faceId = makeid(19);
 
     const face: Face = {
-        "card": humanId,
-        "created_date": new Date(),
-        "modified_date": new Date(),
-        "source_photo_name": photo.originalname,
-        "source_photo": `http://localhost:5000/uploads/cards/xP/${humanId}/face_${photo.originalname}_${randomCharacters(6)}.jpeg`,
-        "thumbnail": `http://localhost:5000/uploads/cards/cK/${humanId}/face_${photo.originalname}_thumbnail_${randomCharacters(6)}.jpeg`,
-        "frame_coords_left": 0,
-        "frame_coords_top": 0,
-        "frame_coords_right": 100,
-        "frame_coords_bottom": 100,
-        "active": true,
-        "features": {},
-        "id": faceId,
-        "meta": {}
+        'card': humanId,
+        'created_date': new Date(),
+        'modified_date': new Date(),
+        'source_photo_name': photo.originalname,
+        'source_photo': `http://localhost:5000/uploads/cards/xP/${humanId}/face_${photo.originalname}_${randomCharacters(6)}.jpeg`,
+        'thumbnail': `http://localhost:5000/uploads/cards/cK/${humanId}/face_${photo.originalname}_thumbnail_${randomCharacters(6)}.jpeg`,
+        'frame_coords_left': 0,
+        'frame_coords_top': 0,
+        'frame_coords_right': 100,
+        'frame_coords_bottom': 100,
+        'active': true,
+        'features': {},
+        'id': faceId,
+        'meta': {}
     };
 
     faces[faceId] = face;

@@ -1,4 +1,4 @@
-import { WatchList, getWatchLists } from "./watch-lists";
+import { WatchList, getWatchLists } from './watch-lists';
 
 function randomCharacters(length: number) {
     let result = '';
@@ -29,7 +29,7 @@ interface EventFace {
     case: null,
     thumbnail: string,
     fullframe: string,
-    bs_type: "overall",
+    bs_type: 'overall',
     frame_coords_left: number,
     frame_coords_top: number,
     frame_coords_right: number,
@@ -92,12 +92,12 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         camera_group: 1,
         thumbnail: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_thumbnail_${randomCharacters(6)}.jpg`,
         fullframe: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_full_frame_${randomCharacters(6)}.jpg`,
-        matched_object: "",
+        matched_object: '',
         matched_cluster: null,
         matched_card: null,
         temperature: null,
         case: null,
-        bs_type: "overall",
+        bs_type: 'overall',
         frame_coords_left: 11,
         frame_coords_top: 21,
         frame_coords_right: 62,
@@ -105,7 +105,7 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         matched: false,
         acknowledged: true,
         acknowledged_by: 0,
-        acknowledged_reaction: "",
+        acknowledged_reaction: '',
         cluster_confidence: 0.0,
         confidence: (Math.random() * 0.45) + 0.5,
         external_detector: true,
@@ -124,11 +124,11 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
                 confidence: 1
             },
             beard: {
-                name: "beard",
+                name: 'beard',
                 confidence: 0.894003
             },
             glasses: {
-                name: "none",
+                name: 'none',
                 confidence: 0.988431
             },
             age: {
@@ -136,15 +136,15 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
                 confidence: 1
             },
             gender: {
-                name: "male",
+                name: 'male',
                 confidence: 0.999998
             },
             medmask: {
-                name: "none",
+                name: 'none',
                 confidence: 0.999999
             },
             emotions: {
-                name: "neutral",
+                name: 'neutral',
                 confidence: 0.97469
             }
         },

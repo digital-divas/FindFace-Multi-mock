@@ -1,9 +1,9 @@
 const day = 1000 * 60 * 60 * 24;
 
-let token = "";
+let token = '';
 let token_expiration_datetime = new Date();
 
-function makeid(length: number) {
+function makeId(length: number) {
     let result = '';
     const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -18,7 +18,7 @@ function makeid(length: number) {
 
 function generateNewToken() {
     token_expiration_datetime = new Date(new Date().getTime() + (day * 180));
-    token = makeid(64);
+    token = makeId(64);
     return { token, token_expiration_datetime };
 }
 

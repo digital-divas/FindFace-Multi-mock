@@ -1,15 +1,12 @@
 import { Express, Request, Response } from 'express';
-import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
 import { createEvent, getEvent, getEvents } from '../controllers/events';
 
-const upload = multer({
-    storage: multer.memoryStorage()
-});
+function loadCameraRoutes(app: Express) {
 
-function loadEventsRoutes(app: Express) {
+    app.post('/cameras/', validAuthorization, async (req: Request, res: Response) => {
 
-    app.post('/events/faces/add/', validAuthorization, upload.single('fullframe'), async (req: Request, res: Response) => {
+
 
         if (!('token' in req.body)) {
             return res.status(400).json({
@@ -121,4 +118,4 @@ function loadEventsRoutes(app: Express) {
     });
 }
 
-export { loadEventsRoutes };
+export { loadCameraRoutes };
