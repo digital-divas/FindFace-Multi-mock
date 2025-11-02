@@ -26,6 +26,19 @@ function loadCardRoutes(app: Express) {
 
     });
 
+
+    app.get('/cards/humans/count/', validAuthorization, async (req: Request, res: Response) => {
+
+        return res.status(200).json({
+            'count': HumanController.count()
+        });
+
+    });
+
+    app.get('/human-card-attachments', validAuthorization, async (req: Request, res: Response) => {
+        return res.status(200).json({ results: [] });
+    });
+
     app.post('/cards/humans/', validAuthorization, async (req: Request, res: Response) => {
         if (!req.body.name) {
             return res.status(400).json({

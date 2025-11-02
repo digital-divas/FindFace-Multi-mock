@@ -128,6 +128,12 @@ export class HumanController {
         return [];
     }
 
+    static count() {
+        const humanList = Object.values(humans);
+
+        return humanList.length;
+    }
+
     static delete(id: number) {
         deleteFacesFromHuman(id);
         delete humans[id];

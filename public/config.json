@@ -1,0 +1,744 @@
+{
+    "menu": {
+        "disabled_items": [
+            "areas",
+            "player",
+            "cases"
+        ]
+    },
+    "extra_options": [],
+    "counter_records": {
+        "proximity_display": {
+            "enabled": true,
+            "min_count": 2
+        }
+    },
+    "objects": {
+        "faces": {
+            "features": {
+                "gender": [
+                    "male",
+                    "female"
+                ],
+                "age": {
+                    "age_gte": "",
+                    "age_lte": ""
+                },
+                "headpose_yaw": {
+                    "headpose_yaw_angle_gte": "",
+                    "headpose_yaw_angle_lte": ""
+                },
+                "headpose_pitch": {
+                    "headpose_pitch_angle_gte": "",
+                    "headpose_pitch_angle_lte": ""
+                },
+                "emotions": [
+                    "angry",
+                    "disgust",
+                    "fear",
+                    "happy",
+                    "sad",
+                    "surprise",
+                    "neutral"
+                ],
+                "glasses": [
+                    "none",
+                    "eye",
+                    "sun"
+                ],
+                "beard": [
+                    "none",
+                    "beard"
+                ],
+                "liveness": [
+                    "real",
+                    "fake"
+                ],
+                "medmask": [
+                    "none",
+                    "incorrect",
+                    "correct"
+                ],
+                "temperature": {
+                    "temperature_gte": "37",
+                    "temperature_lte": "36.999"
+                }
+            },
+            "confidence_display": [
+                {
+                    "confidence": 0.0,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Очень низкий",
+                        "en": "Very Low"
+                    }
+                },
+                {
+                    "confidence": 0.63,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Низкий",
+                        "en": "Low"
+                    }
+                },
+                {
+                    "confidence": 0.695,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Пониженный",
+                        "en": "Slightly Low"
+                    }
+                },
+                {
+                    "confidence": 0.714,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Нормальный",
+                        "en": "Moderate"
+                    }
+                },
+                {
+                    "confidence": 0.74,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Повышенный",
+                        "en": "Slightly High"
+                    }
+                },
+                {
+                    "confidence": 0.77,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Высокий",
+                        "en": "High"
+                    }
+                },
+                {
+                    "confidence": 0.8,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Очень высокий",
+                        "en": "Very High"
+                    }
+                }
+            ],
+            "enabled": true,
+            "clusters": true
+        },
+        "cars": {
+            "features": {
+                "color": [
+                    "beige",
+                    "black",
+                    "blue",
+                    "brown",
+                    "cyan",
+                    "gold",
+                    "green",
+                    "grey",
+                    "orange",
+                    "pink",
+                    "purple",
+                    "red",
+                    "silver",
+                    "violet",
+                    "white",
+                    "yellow"
+                ],
+                "body": [
+                    "suv",
+                    "sedan",
+                    "crossover",
+                    "convertible",
+                    "coupe",
+                    "wagon",
+                    "cab",
+                    "minibus",
+                    "minivan",
+                    "limousine"
+                ],
+                "make": [
+                    "ac",
+                    "acura",
+                    "adler",
+                    "alfa_romeo",
+                    "alpina",
+                    "am_general",
+                    "amc",
+                    "aro",
+                    "asia",
+                    "aston_martin",
+                    "audi",
+                    "austin",
+                    "austin_healey",
+                    "avtokam",
+                    "baic",
+                    "bajaj",
+                    "bentley",
+                    "blakely",
+                    "bmw",
+                    "borgward",
+                    "bradley",
+                    "brilliance",
+                    "bugatti",
+                    "buick",
+                    "bus",
+                    "byd",
+                    "cadillac",
+                    "can_am",
+                    "chana",
+                    "changan",
+                    "changfeng",
+                    "changhe",
+                    "chery",
+                    "chevrolet",
+                    "chrysler",
+                    "citroen",
+                    "dacia",
+                    "dadi",
+                    "daewoo",
+                    "daihatsu",
+                    "daimler",
+                    "dallara",
+                    "datsun",
+                    "derways",
+                    "dkw",
+                    "dodge",
+                    "dongfeng",
+                    "doninvest",
+                    "ds",
+                    "dw_hower",
+                    "eagle",
+                    "excalibur",
+                    "faw",
+                    "ferrari",
+                    "fiat",
+                    "fisker",
+                    "ford",
+                    "foton",
+                    "gaz",
+                    "geely",
+                    "genesis",
+                    "geo",
+                    "gmc",
+                    "great_wall",
+                    "hafei",
+                    "haima",
+                    "hanomag",
+                    "haval",
+                    "hawtai",
+                    "holden",
+                    "honda",
+                    "horch",
+                    "huanghai",
+                    "hudson",
+                    "hummer",
+                    "hyundai",
+                    "ig",
+                    "infiniti",
+                    "international",
+                    "iran_khodro",
+                    "isuzu",
+                    "jac",
+                    "jaguar",
+                    "jeep",
+                    "jinbei",
+                    "jmc",
+                    "kamaz",
+                    "kia",
+                    "lamborghini",
+                    "lancia",
+                    "land_rover",
+                    "landwind",
+                    "lexus",
+                    "lifan",
+                    "lincoln",
+                    "lotus",
+                    "luaz",
+                    "luxgen",
+                    "mahindra",
+                    "maruti",
+                    "maserati",
+                    "maybach",
+                    "mazda",
+                    "mclaren",
+                    "mercedes",
+                    "mercury",
+                    "metrocab",
+                    "mg",
+                    "mini",
+                    "mitsubishi",
+                    "mitsuoka",
+                    "morgan",
+                    "morris",
+                    "moscvich",
+                    "nash",
+                    "nissan",
+                    "oldsmobile",
+                    "opel",
+                    "packard",
+                    "peugeot",
+                    "plymouth",
+                    "polaris",
+                    "pontiac",
+                    "porsche",
+                    "proton",
+                    "puch",
+                    "ram",
+                    "rambler",
+                    "ravon",
+                    "renault",
+                    "rimac",
+                    "rolls_royce",
+                    "rover",
+                    "saab",
+                    "samsung",
+                    "saturn",
+                    "scion",
+                    "seat",
+                    "shanghai_maple",
+                    "shuanghuan",
+                    "simca",
+                    "skoda",
+                    "smart",
+                    "smz",
+                    "spyker",
+                    "ssang_yong",
+                    "steyr",
+                    "studebaker",
+                    "subaru",
+                    "sunbeam",
+                    "suzuki",
+                    "tagaz",
+                    "talbot",
+                    "tata",
+                    "tatra",
+                    "tesla",
+                    "think",
+                    "tianma",
+                    "tianye",
+                    "toyota",
+                    "trabant",
+                    "triumph",
+                    "uaz",
+                    "vauxhall",
+                    "vaz",
+                    "volkswagen",
+                    "volvo",
+                    "vortex",
+                    "wanderer",
+                    "wartburg",
+                    "willis",
+                    "willys",
+                    "xinkai",
+                    "zaz",
+                    "zenvo",
+                    "zil",
+                    "zis",
+                    "zotye",
+                    "zx"
+                ],
+                "license_plate_number": "",
+                "license_plate_country": [
+                    "unknown",
+                    "AM",
+                    "BR",
+                    "BY",
+                    "GE",
+                    "IN",
+                    "KG",
+                    "SA",
+                    "KZ",
+                    "RU",
+                    "UA",
+                    "AE",
+                    "UZ",
+                    "VN",
+                    "AZ",
+                    "EST",
+                    "FIN",
+                    "LT",
+                    "LV",
+                    "MD",
+                    "MX",
+                    "AR",
+                    "PK",
+                    "SRB",
+                    "TJ",
+                    "TH",
+                    "TM",
+                    "CZ"
+                ],
+                "category": [
+                    "unknown",
+                    "A",
+                    "B",
+                    "BE",
+                    "C",
+                    "CE",
+                    "D",
+                    "DE",
+                    "other"
+                ],
+                "weight_type": [
+                    "B_light",
+                    "B_heavy",
+                    "C_light",
+                    "C_heavy",
+                    "D_light",
+                    "D_long",
+                    "other"
+                ],
+                "special_vehicle_type": [
+                    "taxi",
+                    "route_transport",
+                    "car_sharing",
+                    "ambulance",
+                    "police",
+                    "rescue_service",
+                    "gas_service",
+                    "military",
+                    "road_service",
+                    "other_special",
+                    "not_special"
+                ],
+                "orientation": [
+                    "front",
+                    "back",
+                    "side"
+                ]
+            },
+            "confidence_display": [
+                {
+                    "confidence": 0.0,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Очень низкий",
+                        "en": "Very Low"
+                    }
+                },
+                {
+                    "confidence": 0.3,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Низкий",
+                        "en": "Low"
+                    }
+                },
+                {
+                    "confidence": 0.45,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Пониженный",
+                        "en": "Slightly Low"
+                    }
+                },
+                {
+                    "confidence": 0.65,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Нормальный",
+                        "en": "Moderate"
+                    }
+                },
+                {
+                    "confidence": 0.75,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Повышенный",
+                        "en": "Slightly High"
+                    }
+                },
+                {
+                    "confidence": 0.85,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Высокий",
+                        "en": "High"
+                    }
+                },
+                {
+                    "confidence": 0.9,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Очень высокий",
+                        "en": "Very High"
+                    }
+                }
+            ],
+            "enabled": false,
+            "clusters": false
+        },
+        "bodies": {
+            "features": {
+                "headwear": [
+                    "hat",
+                    "hood",
+                    "none"
+                ],
+                "upper_clothes": [
+                    "long_sleeves",
+                    "short_sleeves",
+                    "without_sleeves"
+                ],
+                "detailed_upper_clothes": [
+                    "jacket",
+                    "coat",
+                    "sleeveless",
+                    "sweatshirt",
+                    "t-shirt",
+                    "shirt",
+                    "dress"
+                ],
+                "top_color": [
+                    "white",
+                    "black",
+                    "grey",
+                    "brown",
+                    "red",
+                    "orange",
+                    "yellow",
+                    "green",
+                    "lightblue",
+                    "blue",
+                    "purple",
+                    "pink",
+                    "beige",
+                    "violet"
+                ],
+                "lower_clothes": [
+                    "pants",
+                    "obscured",
+                    "skirt",
+                    "shorts"
+                ],
+                "bottom_color": [
+                    "white",
+                    "black",
+                    "grey",
+                    "brown",
+                    "red",
+                    "orange",
+                    "yellow",
+                    "green",
+                    "lightblue",
+                    "blue",
+                    "purple",
+                    "pink",
+                    "beige",
+                    "violet"
+                ],
+                "bag_hand": [
+                    "hand",
+                    "none"
+                ],
+                "bag_back": [
+                    "back",
+                    "none"
+                ],
+                "bag_ground": [
+                    "ground",
+                    "none"
+                ],
+                "vest_type": [
+                    "green/yellow",
+                    "orange",
+                    "not_visible",
+                    "none"
+                ],
+                "helmet_type": [
+                    "red/orange",
+                    "white",
+                    "other",
+                    "not_visible",
+                    "none"
+                ],
+                "age_group": [
+                    "0-16",
+                    "17-35",
+                    "36-50",
+                    "50+"
+                ],
+                "gender": [
+                    "male",
+                    "female"
+                ]
+            },
+            "confidence_display": [
+                {
+                    "confidence": 0.0,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Очень низкий",
+                        "en": "Very Low"
+                    }
+                },
+                {
+                    "confidence": 0.5,
+                    "color": "var(--color-negative)",
+                    "label": {
+                        "ru": "Низкий",
+                        "en": "Low"
+                    }
+                },
+                {
+                    "confidence": 0.6,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Пониженный",
+                        "en": "Slightly Low"
+                    }
+                },
+                {
+                    "confidence": 0.65,
+                    "color": "var(--color-warning)",
+                    "label": {
+                        "ru": "Нормальный",
+                        "en": "Moderate"
+                    }
+                },
+                {
+                    "confidence": 0.8,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Повышенный",
+                        "en": "Slightly High"
+                    }
+                },
+                {
+                    "confidence": 0.85,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Высокий",
+                        "en": "High"
+                    }
+                },
+                {
+                    "confidence": 0.9,
+                    "color": "var(--color-positive)",
+                    "label": {
+                        "ru": "Очень высокий",
+                        "en": "Very High"
+                    }
+                }
+            ],
+            "enabled": false,
+            "clusters": false
+        }
+    },
+    "video_player": {
+        "overlay": {
+            "objects": {
+                "faces": {
+                    "bbox": true,
+                    "info": true
+                },
+                "bodies": {
+                    "bbox": false,
+                    "info": false
+                },
+                "cars": {
+                    "bbox": false,
+                    "info": false
+                }
+            },
+            "gdpr": false
+        },
+        "timeline": {
+            "min_zoom": 0.2,
+            "max_zoom": 200,
+            "objects": {
+                "events": {
+                    "faces": {
+                        "enabled": true,
+                        "limit": 500,
+                        "matchedColor": "rgba(6,193,103,0.8)",
+                        "unmatchedColor": "rgba(232,92,74,0.8)"
+                    },
+                    "bodies": {
+                        "enabled": false,
+                        "limit": 500,
+                        "matchedColor": "rgba(6,193,103,0.8)",
+                        "unmatchedColor": "rgba(232,92,74,0.8)"
+                    },
+                    "cars": {
+                        "enabled": false,
+                        "limit": 500,
+                        "matchedColor": "rgba(6,193,103,0.8)",
+                        "unmatchedColor": "rgba(232,92,74,0.8)"
+                    }
+                },
+                "episodes": {
+                    "humans": {
+                        "enabled": false,
+                        "limit": 500,
+                        "matchedColor": "rgba(6,193,103,0.8)",
+                        "unmatchedColor": "rgba(232,92,74,0.8)"
+                    },
+                    "cars": {
+                        "enabled": false,
+                        "limit": 500,
+                        "matchedColor": "rgba(6,193,103,0.8)",
+                        "unmatchedColor": "rgba(232,92,74,0.8)"
+                    }
+                }
+            }
+        }
+    },
+    "vms": {
+        "enabled": false,
+        "video_player": false
+    },
+    "external_vms": {
+        "video_player": false,
+        "max_width": 320,
+        "max_height": 240,
+        "quality": 50,
+        "enabled": false
+    },
+    "counters": {
+        "update_interval": 30
+    },
+    "hooks_default_filters": {
+        "url": "ui-static/hooks_default_filters.json"
+    },
+    "services": {
+        "ffsecurity": {
+            "episodes": false,
+            "webhooks": true,
+            "video_archive_events_manager": false,
+            "active_directory": false,
+            "vms_cleanup": false,
+            "counters": true,
+            "reports": true,
+            "proximity_calibration": true,
+            "areas": true,
+            "cleanup": true
+        }
+    },
+    "plugins": {},
+    "enable_acl": true,
+    "auth": {
+        "FACE_AUTH_CONFIDENCE": 0.714,
+        "NEED_SESSION_RENEW": false,
+        "RENEW_SESSION_INTERVAL": 0,
+        "MAXIMUM_RENEW_ATTEMPTS": 2,
+        "AUTH_TYPE": "face_or_password",
+        "MAXIMUM_SESSION_LENGTH": 15552000
+    },
+    "available_detect_features": {
+        "face": [
+            "medmask",
+            "glasses",
+            "gender",
+            "headpose",
+            "age",
+            "emotions",
+            "beard"
+        ],
+        "body": [],
+        "car": []
+    },
+    "match_clusters": false,
+    "language": "en-us"
+}

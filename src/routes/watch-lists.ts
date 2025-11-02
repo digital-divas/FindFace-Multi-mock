@@ -11,6 +11,13 @@ function loadWatchListsRoutes(app: Express) {
 
     });
 
+    app.get('/watch-lists/count/', validAuthorization, async (req: Request, res: Response) => {
+        return res.status(200).json({
+            'count': getWatchLists().length
+        });
+
+    });
+
     app.post('/watch-lists/', validAuthorization, async (req: Request, res: Response) => {
         if (!req.body.name) {
             return res.status(400).json({
