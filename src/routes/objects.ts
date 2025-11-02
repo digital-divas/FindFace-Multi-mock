@@ -98,7 +98,17 @@ function loadObjectsRoutes(app: Express) {
         return res.status(200).send({
             'next_page': null,
             'count': faces.length,
-            'results': faces
+            'results': faces.map(face => {
+                const sourcePhoto = new URL(face.source_photo);
+                sourcePhoto.host = req.get('host') || 'localhost:5000';
+                face.source_photo = sourcePhoto.toString();
+
+                const thumbnail = new URL(face.thumbnail);
+                thumbnail.host = req.get('host') || 'localhost:5000';
+                face.thumbnail = thumbnail.toString();
+
+                return face;
+            })
         });
     });
 

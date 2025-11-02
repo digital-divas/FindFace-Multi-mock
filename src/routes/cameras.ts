@@ -58,7 +58,18 @@ function loadCameraRoutes(app: Express) {
         return res.status(200).json({
             next_page: null,
             prev_page: null,
-            results: cameras,
+            results: cameras.map(camera => {
+
+                if (!camera) {
+                    return camera;
+                }
+
+                const cameraScreenshot = new URL(camera.screenshot);
+                cameraScreenshot.host = req.get('host') || 'localhost:5000';
+                camera.screenshot = cameraScreenshot.toString();
+
+                return camera;
+            }),
         });
 
     });

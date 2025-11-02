@@ -112,6 +112,14 @@ function loadEventsRoutes(app: Express) {
             });
         }
 
+        const fullFrame = new URL(event.fullframe);
+        fullFrame.host = req.get('host') || 'localhost:5000';
+        event.fullframe = fullFrame.toString();
+
+        const thumbnail = new URL(event.thumbnail);
+        thumbnail.host = req.get('host') || 'localhost:5000';
+        event.thumbnail = thumbnail.toString();
+
         return res.status(200).json(event);
     });
 
@@ -128,7 +136,22 @@ function loadEventsRoutes(app: Express) {
         return res.status(200).json({
             'next_page': null,
             'count': events.length,
-            'results': events
+            'results': events.map(event => {
+
+                if (!event) {
+                    return event;
+                }
+
+                const fullFrame = new URL(event.fullframe);
+                fullFrame.host = req.get('host') || 'localhost:5000';
+                event.fullframe = fullFrame.toString();
+
+                const thumbnail = new URL(event.thumbnail);
+                thumbnail.host = req.get('host') || 'localhost:5000';
+                event.thumbnail = thumbnail.toString();
+
+                return event;
+            })
         });
     });
 }
