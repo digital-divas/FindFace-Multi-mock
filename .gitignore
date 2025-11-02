@@ -117,3 +117,5 @@ dist
 .pnp.*
 
 oci-key.pem
+
+.DS_Store

@@ -103,8 +103,29 @@ function deleteFacesFromHuman(humanId: number) {
     }
 }
 
+function listFaces({ cards }: { cards?: number[]; }) {
+    const faceObjs = Object.values(faces);
+
+    const faceReturn: Face[] = [];
+
+    for (const face of faceObjs) {
+
+        if (!face) {
+            continue;
+        }
+
+        if (cards && !cards.includes(face.card)) {
+            continue;
+        }
+
+        faceReturn.push(face);
+    }
+
+    return faceReturn;
+}
+
 function deleteFace(faceId: string) {
     delete faces[faceId];
 }
 
-export { createFace, getFace, deleteFacesFromHuman, deleteFace };
+export { createFace, getFace, deleteFacesFromHuman, deleteFace, listFaces };

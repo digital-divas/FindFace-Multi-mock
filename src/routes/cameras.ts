@@ -49,12 +49,29 @@ function loadCameraRoutes(app: Express) {
 
     app.get('/cameras/', validAuthorization, async (req: Request, res: Response) => {
 
-        const cameras = CameraController.list();
+        const external_detector = req.query.external_detector;
+
+        const cameras = CameraController.list({
+            external_detector: external_detector === undefined ? undefined : external_detector === 'true'
+        });
 
         return res.status(200).json({
             next_page: null,
             prev_page: null,
             results: cameras,
+        });
+
+    });
+
+    app.get('/cameras/count/', validAuthorization, async (req: Request, res: Response) => {
+        const external_detector = req.query.external_detector;
+
+        const cameras = CameraController.list({
+            external_detector: external_detector === undefined ? undefined : external_detector === 'true'
+        });
+
+        return res.status(200).json({
+            count: cameras.length,
         });
 
     });

@@ -207,9 +207,22 @@ export class CameraController {
         return camera;
     }
 
-    static list() {
+    static list({ external_detector }: { external_detector?: boolean; }) {
         const cameraList = Object.values(cameras);
-        return cameraList;
+        return cameraList.filter(camera => {
+
+            if (!camera) {
+                return false;
+            }
+
+            if (external_detector !== undefined) {
+                if (external_detector !== camera.external_detector) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     static get(id: number) {

@@ -2,7 +2,7 @@ import { Express, Request, Response } from 'express';
 import multer from 'multer';
 import { validAuthorization } from '../services/route_middlewares';
 import { HumanController } from '../controllers/humans';
-import { createFace, deleteFace, getFace } from '../controllers/faces';
+import { createFace, deleteFace, getFace, listFaces } from '../controllers/faces';
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -77,6 +77,29 @@ function loadObjectsRoutes(app: Express) {
         deleteFace(face.id);
 
         return res.status(204).send();
+    });
+
+    app.get('/objects/faces/', validAuthorization, async (req: Request, res: Response) => {
+
+        const cards = req.query.card as string | string[] | undefined;
+
+        let cardArray: string[] = [];
+
+        if (typeof cards === 'string') {
+            cardArray = [cards];
+        } else if (Array.isArray(cards)) {
+            cardArray = cards;
+        }
+
+        const faces = listFaces({
+            cards: cards === undefined ? undefined : cardArray.map((card) => Number(card))
+        });
+
+        return res.status(200).send({
+            'next_page': null,
+            'count': faces.length,
+            'results': faces
+        });
     });
 
 }
