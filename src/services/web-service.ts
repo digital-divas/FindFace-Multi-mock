@@ -14,6 +14,7 @@ import { loadUsersRoutes } from '../routes/users';
 import { loadSettingsRoutes } from '../routes/settings';
 import { loadGroupsRoutes } from '../routes/groups';
 import { loadCameraGroupsRoutes } from '../routes/camera_groups';
+import { loadFilesRoutes } from '../routes/files';
 
 interface WebService {
     port: string;
@@ -44,6 +45,7 @@ class WebService {
         loadSettingsRoutes(this.app);
         loadCameraGroupsRoutes(this.app);
         loadGroupsRoutes(this.app);
+        loadFilesRoutes(this.app);
 
         this.app.get('/', (req: Request, res: Response) => {
             res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
