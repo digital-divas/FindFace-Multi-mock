@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import morgan from 'morgan';
+import http from 'http';
 
 import { loadDetectRoutes } from '../routes/detect';
 import { loadCardRoutes } from '../routes/cards';
@@ -15,16 +16,16 @@ import { loadSettingsRoutes } from '../routes/settings';
 import { loadGroupsRoutes } from '../routes/groups';
 import { loadCameraGroupsRoutes } from '../routes/camera_groups';
 import { loadFilesRoutes } from '../routes/files';
-
-interface WebService {
-    port: string;
-    app: Express;
-}
+import MyWebSocketServer from './web-socket-server';
 
 
 class WebService {
+    private port: string;
+    public readonly app: Express;
+    public wss?: MyWebSocketServer;
+
     constructor() {
-        this.port = process.env.PORT || '5000';
+        this.port = process.env.PORT || '9093';
         this.app = express();
 
         this.app.use(express.static(path.join(process.cwd(), 'public')));
@@ -60,11 +61,17 @@ class WebService {
     async initialize(): Promise<void> {
         console.log('[NTECHLAB MOCK] - Initializing express Web service');
 
+        const server = http.createServer(this.app);
+
+        this.wss = new MyWebSocketServer(server);
+
         return new Promise((resolve) => {
-            this.app.listen(this.port, () => {
+
+            server.listen(this.port, () => {
                 console.log('[NTECHLAB MOCK] - Web service listening on port', this.port);
                 resolve();
             });
+
         });
     }
 
