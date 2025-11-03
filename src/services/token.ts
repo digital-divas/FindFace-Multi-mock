@@ -3,6 +3,13 @@ const day = 1000 * 60 * 60 * 24;
 let token = '';
 let token_expiration_datetime = new Date();
 
+const tokens: {
+    [uuid: string]: {
+        token: string;
+        token_expiration_datetime: Date;
+    };
+} = {};
+
 function makeId(length: number) {
     let result = '';
     const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -16,16 +23,23 @@ function makeId(length: number) {
 }
 
 
-function generateNewToken() {
+function generateNewToken(uuid: string) {
     token_expiration_datetime = new Date(new Date().getTime() + (day * 180));
     token = makeId(64);
-    return { token, token_expiration_datetime };
+
+    tokens[uuid] = { token, token_expiration_datetime };
+
+    return tokens[uuid];
 }
 
 function validToken(sentToken: string) {
-    if (sentToken == token && new Date() < token_expiration_datetime) {
-        return true;
+
+    for (const token of Object.values(tokens)) {
+        if (sentToken == token.token && new Date() < token.token_expiration_datetime) {
+            return true;
+        }
     }
+
     return false;
 }
 
