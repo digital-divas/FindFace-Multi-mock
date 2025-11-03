@@ -32,7 +32,7 @@ function loadAuthRoutes(app: Express) {
             });
         }
 
-        const generatedToken = generateNewToken();
+        const generatedToken = generateNewToken(req.body.uuid);
 
         return res.status(200).json({
             'user': adminUser,

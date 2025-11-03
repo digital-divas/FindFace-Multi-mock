@@ -24,7 +24,7 @@ interface WebService {
 
 class WebService {
     constructor() {
-        this.port = process.env.PORT || '5000';
+        this.port = process.env.PORT || '9093';
         this.app = express();
 
         this.app.use(express.static(path.join(process.cwd(), 'public')));
