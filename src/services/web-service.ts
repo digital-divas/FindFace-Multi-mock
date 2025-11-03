@@ -25,7 +25,7 @@ class WebService {
     public wss?: MyWebSocketServer;
 
     constructor() {
-        this.port = process.env.PORT || '9093';
+        this.port = process.env.PORT || '5000';
         this.app = express();
 
         this.app.use(express.static(path.join(process.cwd(), 'public')));
