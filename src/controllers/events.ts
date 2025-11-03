@@ -90,7 +90,7 @@ async function createEvent({ created_date, camera, photo }: { created_date?: str
     const uuid = randomCharacters(6);
 
     const dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-    const datePath = path.join(process.cwd(), 'data', 'face_event', ...dateString);
+    const datePath = path.join(process.cwd(), 'data', 'face_event', ...dateString.split('/'));
 
     await fs.mkdir(datePath, { recursive: true });
     await fs.writeFile(path.join(datePath, `${eventId}_face_thumbnail_${uuid}.jpg`), photo.buffer);
