@@ -1,4 +1,6 @@
+import path from 'path';
 import { WatchList, getWatchLists } from './watch-lists';
+import fs from 'fs/promises';
 
 function randomCharacters(length: number) {
     let result = '';
@@ -77,7 +79,7 @@ interface EventFace {
 let eventId = 0;
 const events: { [eventId: string]: EventFace | undefined; } = {};
 
-function createEvent({ created_date, camera }: { created_date?: string; camera: number; }) {
+async function createEvent({ created_date, camera, photo }: { created_date?: string; camera: number; photo: Express.Multer.File; }) {
     eventId++;
 
     if (!created_date) {
@@ -85,6 +87,14 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
     }
 
     const date = new Date(created_date);
+    const uuid = randomCharacters(6);
+
+    const dateString = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    const datePath = path.join(process.cwd(), 'data', 'face_event', ...dateString);
+
+    await fs.mkdir(datePath, { recursive: true });
+    await fs.writeFile(path.join(datePath, `${eventId}_face_thumbnail_${uuid}.jpg`), photo.buffer);
+    await fs.writeFile(path.join(datePath, `${eventId}_face_full_frame_${uuid}.jpg`), photo.buffer);
 
     const eventFace: EventFace = {
         id: String(eventId),
@@ -93,8 +103,8 @@ function createEvent({ created_date, camera }: { created_date?: string; camera: 
         acknowledged_date: created_date,
         camera: camera,
         camera_group: 1,
-        thumbnail: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_thumbnail_${randomCharacters(6)}.jpg`,
-        fullframe: `http://localhost:5000/uploads/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/face_event/${eventId}_face_full_frame_${randomCharacters(6)}.jpg`,
+        thumbnail: `http://localhost:5000/uploads/${dateString}/face_event/${eventId}_face_thumbnail_${uuid}.jpg`,
+        fullframe: `http://localhost:5000/uploads/${dateString}/face_event/${eventId}_face_full_frame_${uuid}.jpg`,
         matched_object: '',
         matched_cluster: null,
         matched_card: null,

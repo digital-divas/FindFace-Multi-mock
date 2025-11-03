@@ -57,7 +57,7 @@ function loadObjectsRoutes(app: Express) {
         //     "param": "source_photo"
         // });
 
-        const face = createFace(human.id, source_photo);
+        const face = await createFace(human.id, source_photo);
 
         return res.status(201).json(face);
 
