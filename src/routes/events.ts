@@ -76,9 +76,10 @@ function loadEventsRoutes(app: Express) {
         //     }
         // });
 
-        const eventFace = createEvent({
+        const eventFace = await createEvent({
             camera: Number(req.body.camera),
-            created_date: req.body.timestamp
+            created_date: req.body.timestamp,
+            photo: fullframe,
         });
 
         return res.status(200).json({

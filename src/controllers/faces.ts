@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs/promises';
 
 interface Face {
     id: string;
@@ -48,18 +50,31 @@ function randomCharacters(length: number) {
     return result;
 }
 
+function sanitizeFilename(name: string): string {
+    const safe = name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+    return encodeURIComponent(safe);
+}
 
-function createFace(humanId: number, photo: Express.Multer.File) {
+async function createFace(humanId: number, photo: Express.Multer.File) {
 
     const faceId = makeId(19);
+
+    const humanPath = path.join(process.cwd(), 'data', 'human', String(humanId));
+    const uuid = randomCharacters(6);
+
+    const safeName = sanitizeFilename(photo.originalname);
+
+    await fs.mkdir(humanPath, { recursive: true });
+    await fs.writeFile(path.join(humanPath, `face_${safeName}_${uuid}.jpeg`), photo.buffer);
+    await fs.writeFile(path.join(humanPath, `face_${safeName}_thumbnail_${uuid}.jpeg`), photo.buffer);
 
     const face: Face = {
         'card': humanId,
         'created_date': new Date().toISOString(),
         'modified_date': new Date().toISOString(),
-        'source_photo_name': photo.originalname,
-        'source_photo': `http://localhost:5000/uploads/cards/xP/${humanId}/face_${photo.originalname}_${randomCharacters(6)}.jpeg`,
-        'thumbnail': `http://localhost:5000/uploads/cards/cK/${humanId}/face_${photo.originalname}_thumbnail_${randomCharacters(6)}.jpeg`,
+        'source_photo_name': safeName,
+        'source_photo': `http://localhost:5000/uploads/cards/xP/${humanId}/face_${safeName}_${uuid}.jpeg`,
+        'thumbnail': `http://localhost:5000/uploads/cards/cK/${humanId}/face_${safeName}_thumbnail_${uuid}.jpeg`,
         'frame_coords_left': 0,
         'frame_coords_top': 0,
         'frame_coords_right': 100,
