@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { agent } from 'supertest';
 import { readFile } from 'fs/promises';
 
-import { webService } from '../src/services/web-service';
-import { resetEvents } from '../src/controllers/events';
+import { webService } from '../src/services/web-service.js';
+import { resetEvents } from '../src/controllers/events.js';
 
 const request = agent(webService.app);
 
@@ -42,7 +42,7 @@ describe('Events Route Testing', async () => {
         cameraId = res.body.id;
         externalDetectorToken = res.body.external_detector_token;
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -67,7 +67,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test get events by detectionId', async () => {
-        resetEvents();
+        await resetEvents();
         const res = await request.get(`/events/faces/`)
             .query({
                 looks_like: 'detection:' + detectionId,
@@ -81,8 +81,8 @@ describe('Events Route Testing', async () => {
     });
 
     it('test create event with timestamp', async () => {
-        resetEvents();
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        await resetEvents();
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         let res = await request.post(`/events/faces/add/`)
             .attach('fullframe', file, {
@@ -123,7 +123,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test create event without timestamp', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
             .attach('fullframe', file, {
@@ -152,7 +152,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing token', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
             .attach('fullframe', file, {
@@ -168,7 +168,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing camera', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
             .attach('fullframe', file, {
@@ -184,7 +184,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid create event - missing mf_selector', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/events/faces/add/`)
             .attach('fullframe', file, {
@@ -200,7 +200,7 @@ describe('Events Route Testing', async () => {
     });
 
     it('test invalid camera or token', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
         let res;
 
         res = await request.post(`/events/faces/add/`)

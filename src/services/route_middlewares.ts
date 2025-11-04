@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { validToken } from './token';
+import { validToken } from './token.js';
 
 const licenseError = false;
 
-function validAuthorization(req: Request, res: Response, next: NextFunction) {
+async function validAuthorization(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
         return res.status(401).json({
             'code': 'UNAUTHORIZED',
@@ -13,7 +13,10 @@ function validAuthorization(req: Request, res: Response, next: NextFunction) {
     }
 
     const token = req.headers.authorization.replace('Token ', '');
-    if (!validToken(token)) {
+
+    const isValidToken = await validToken(token);
+
+    if (!isValidToken) {
         return res.status(401).json({
             'code': 'UNAUTHORIZED',
             'desc': 'Invalid token.'

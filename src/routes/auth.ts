@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
-import { generateNewToken } from '../services/token';
-import { adminUser } from '../controllers/users';
+import { generateNewToken } from '../services/token.js';
+import { adminUser } from '../controllers/users.js';
 
 
 function loadAuthRoutes(app: Express) {
@@ -32,7 +32,7 @@ function loadAuthRoutes(app: Express) {
             });
         }
 
-        const generatedToken = generateNewToken(req.body.uuid);
+        const generatedToken = await generateNewToken(req.body.uuid);
 
         return res.status(200).json({
             'user': adminUser,

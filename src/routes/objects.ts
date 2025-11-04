@@ -1,8 +1,9 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
-import { validAuthorization } from '../services/route_middlewares';
-import { HumanController } from '../controllers/humans';
-import { createFace, deleteFace, getFace, listFaces } from '../controllers/faces';
+import { validAuthorization } from '../services/route_middlewares.js';
+import { HumanController } from '../controllers/humans.js';
+import { createFace, deleteFace, getFace, listFaces } from '../controllers/faces.js';
+
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -21,7 +22,7 @@ function loadObjectsRoutes(app: Express) {
             });
         }
 
-        const human = HumanController.get(Number(req.body.card));
+        const human = await HumanController.get(Number(req.body.card));
 
         if (!human) {
             return res.status(400).json({
@@ -64,7 +65,7 @@ function loadObjectsRoutes(app: Express) {
     });
 
     app.delete('/objects/faces/:faceId/', validAuthorization, async (req: Request, res: Response) => {
-        const face = getFace(req.params.faceId);
+        const face = await getFace(req.params.faceId);
 
         if (!face) {
             return res.status(404).json({
@@ -74,7 +75,7 @@ function loadObjectsRoutes(app: Express) {
             });
         }
 
-        deleteFace(face.id);
+        await deleteFace(face.id);
 
         return res.status(204).send();
     });
@@ -91,8 +92,8 @@ function loadObjectsRoutes(app: Express) {
             cardArray = cards;
         }
 
-        const faces = listFaces({
-            cards: cards === undefined ? undefined : cardArray.map((card) => Number(card))
+        const faces = await listFaces({
+            cards: cards === undefined ? undefined : cardArray.map((card) => Number(card)),
         });
 
         return res.status(200).send({

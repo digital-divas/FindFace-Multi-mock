@@ -1,3 +1,5 @@
+import { database } from '../services/database.js';
+
 export interface Camera {
     id: number,
     /**
@@ -95,8 +97,15 @@ export interface Camera {
     external_vms_camera_id: null;
 }
 
+export interface CameraData {
+    [cameraId: string]: Camera;
+}
+
 let cameraId = 0;
-const cameras: { [cameraId: number]: Camera | undefined; } = {};
+
+export function setCameraId(newCameraId: number) {
+    cameraId = newCameraId;
+}
 
 function makeToken(length: number) {
     let result = '';
@@ -111,7 +120,7 @@ function makeToken(length: number) {
 }
 
 export class CameraController {
-    static create({ name, group }: { name: string; group: number; }) {
+    static async create({ name, group }: { name: string; group: number; }) {
         cameraId++;
         const camera: Camera = {
             id: cameraId,
@@ -203,12 +212,17 @@ export class CameraController {
             external_vms: null,
             external_vms_camera_id: null
         };
-        cameras[cameraId] = camera;
+        const db = await database.init();
+        db.data.cameras[String(cameraId)] = camera;
+        await db.write();
+
         return camera;
     }
 
-    static list({ external_detector }: { external_detector?: boolean; }) {
-        const cameraList = Object.values(cameras);
+    static async list({ external_detector }: { external_detector?: boolean; }) {
+        const db = await database.init();
+        const cameraList = Object.values(db.data.cameras);
+
         return cameraList.filter(camera => {
 
             if (!camera) {
@@ -225,11 +239,17 @@ export class CameraController {
         });
     }
 
-    static get(id: number) {
-        return cameras[id];
+    static async get(id: number) {
+        const db = await database.init();
+
+        return db.data.cameras[String(id)];
     }
 
-    static delete(id: number) {
-        delete cameras[id];
+    static async delete(id: number) {
+        const db = await database.init();
+
+        delete db.data.cameras[String(id)];
+
+        await db.write();
     }
 }

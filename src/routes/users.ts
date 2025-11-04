@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import { validAuthorization } from '../services/route_middlewares';
-import { adminUser } from '../controllers/users';
+import { validAuthorization } from '../services/route_middlewares.js';
+import { adminUser } from '../controllers/users.js';
 
 function loadUsersRoutes(app: Express) {
 

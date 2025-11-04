@@ -1,4 +1,7 @@
-interface WatchList {
+import { Low } from 'lowdb';
+import { Data, database } from '../services/database.js';
+
+export interface WatchList {
     id: number,
     /**
      * A String containing a date on ISO format
@@ -29,8 +32,13 @@ interface WatchList {
 
 let watchListId = 1;
 
-const watchLists: WatchList[] = [
-    {
+
+export function setWatchListId(newWatchListId: number) {
+    watchListId = newWatchListId;
+}
+
+export async function createDefaultWatchLists(db: Low<Data>) {
+    db.data.watchLists.push({
         'id': -1,
         'created_date': new Date().toISOString(),
         'modified_date': new Date().toISOString(),
@@ -51,8 +59,8 @@ const watchLists: WatchList[] = [
         'disable_schedule': {},
         'recount_schedule_on': null,
         'origin': 'ffsecurity'
-    },
-    {
+    });
+    db.data.watchLists.push({
         'id': 1,
         'created_date': new Date().toISOString(),
         'modified_date': new Date().toISOString(),
@@ -73,14 +81,16 @@ const watchLists: WatchList[] = [
         'disable_schedule': {},
         'recount_schedule_on': null,
         'origin': 'ffsecurity'
-    }
-];
-
-function getWatchLists() {
-    return watchLists;
+    });
+    await db.write();
 }
 
-function createWatchList(name: string, active: boolean) {
+async function getWatchLists() {
+    const db = await database.init();
+    return db.data.watchLists;
+}
+
+async function createWatchList(name: string, active: boolean) {
     watchListId++;
     const watchList: WatchList = {
         'id': watchListId,
@@ -104,17 +114,20 @@ function createWatchList(name: string, active: boolean) {
         'recount_schedule_on': null,
         'origin': 'ffsecurity'
     };
-    watchLists.push(watchList);
+    const db = await database.init();
+    db.data.watchLists.push(watchList);
+    await db.write();
 
     return watchList;
 }
 
-function getWatchList(id: number) {
-    const filteredWatchLists = watchLists.filter(watchList => watchList.id == id);
+async function getWatchList(id: number) {
+    const db = await database.init();
+    const filteredWatchLists = db.data.watchLists.filter(watchList => watchList.id == id);
     if (filteredWatchLists.length) {
         return filteredWatchLists[0];
     }
     return null;
 }
 
-export { createWatchList, getWatchLists, getWatchList, WatchList };
+export { createWatchList, getWatchLists, getWatchList };

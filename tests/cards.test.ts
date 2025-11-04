@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { agent } from 'supertest';
 import { readFile } from 'fs/promises';
 
-import { webService } from '../src/services/web-service';
+import { webService } from '../src/services/web-service.js';
 
 const request = agent(webService.app);
 
@@ -24,7 +24,7 @@ describe('Cards Route Testing', async () => {
         expect(res.body.token).to.not.be.undefined;
         token = res.body.token;
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({

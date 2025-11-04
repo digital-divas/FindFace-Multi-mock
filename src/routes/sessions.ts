@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import { validAuthorization } from '../services/route_middlewares';
+import { validAuthorization } from '../services/route_middlewares.js';
 
 const createdDate = new Date();
 

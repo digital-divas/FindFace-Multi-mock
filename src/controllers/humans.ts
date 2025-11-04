@@ -1,4 +1,5 @@
-import { deleteFacesFromHuman } from './faces';
+import { database } from '../services/database.js';
+import { deleteFacesFromHuman } from './faces.js';
 
 interface Human {
     id: number;
@@ -27,8 +28,15 @@ interface Human {
     links_to_relations: { id: number, name: string, created_date: Date, card: number, relation: number; }[];
 }
 
+export interface HumanData {
+    [humanId: string]: Human;
+}
+
 let humanId = 0;
-const humans: { [humanId: number]: Human | undefined; } = {};
+
+export function setHumanId(newHumanId: number) {
+    humanId = newHumanId;
+}
 
 function getRandomItems<T>(list: T[], itemQty: number) {
     const copyList = [...list];
@@ -43,7 +51,7 @@ function getRandomItems<T>(list: T[], itemQty: number) {
 }
 
 export class HumanController {
-    static create({ name, active, watchLists }: { name: string; active: boolean; watchLists: number[]; }) {
+    static async create({ name, active, watchLists }: { name: string; active: boolean; watchLists: number[]; }) {
         humanId++;
         const human: Human = {
             id: humanId,
@@ -65,16 +73,21 @@ export class HumanController {
             body_cluster: null,
             links_to_relations: []
         };
-        humans[humanId] = human;
+        const db = await database.init();
+        db.data.humans[String(humanId)] = human;
+
+        await db.write();
+
         return human;
     }
 
-    static get(id: number) {
-        const human = humans[id];
+    static async get(id: number) {
+        const db = await database.init();
+        const human = db.data.humans[String(id)];
         return human;
     }
 
-    static list(params: {
+    static async list(params: {
         page: number;
         limit: number;
         threshold: number;
@@ -85,7 +98,8 @@ export class HumanController {
     }) {
         const offset = params.page * params.limit;
 
-        const humanList = Object.values(humans);
+        const db = await database.init();
+        const humanList = Object.values(db.data.humans);
 
         const filteredHumanList = humanList.filter((human) => {
             if (!human) {
@@ -128,14 +142,18 @@ export class HumanController {
         return [];
     }
 
-    static count() {
-        const humanList = Object.values(humans);
+    static async count() {
+        const db = await database.init();
+        const humanList = Object.values(db.data.humans);
 
         return humanList.length;
     }
 
-    static delete(id: number) {
-        deleteFacesFromHuman(id);
-        delete humans[id];
+    static async delete(id: number) {
+        await deleteFacesFromHuman(id);
+        const db = await database.init();
+        delete db.data.humans[String(id)];
+
+        await db.write();
     }
 }

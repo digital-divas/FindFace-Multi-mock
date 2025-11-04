@@ -1,14 +1,12 @@
-const day = 1000 * 60 * 60 * 24;
+import moment from 'moment';
+import { database } from './database.js';
 
-let token = '';
-let token_expiration_datetime = new Date();
-
-const tokens: {
+export interface Token {
     [uuid: string]: {
         token: string;
         token_expiration_datetime: Date;
     };
-} = {};
+}
 
 function makeId(length: number) {
     let result = '';
@@ -23,21 +21,27 @@ function makeId(length: number) {
 }
 
 
-function generateNewToken(uuid: string) {
-    token_expiration_datetime = new Date(new Date().getTime() + (day * 180));
-    token = makeId(64);
+async function generateNewToken(uuid: string) {
+    const token_expiration_datetime = new Date(new Date().getTime() + moment.duration(180, 'days').asMilliseconds());
+    const token = makeId(64);
 
-    tokens[uuid] = { token, token_expiration_datetime };
+    const db = await database.init();
 
-    return tokens[uuid];
+    db.data.tokens[uuid] = { token, token_expiration_datetime };
+
+    await db.write();
+
+    return db.data.tokens[uuid];
 }
 
-function validToken(sentToken: string) {
+async function validToken(sentToken: string) {
 
-    for (const token of Object.values(tokens)) {
-        if (sentToken == token.token && new Date() < token.token_expiration_datetime) {
-            return true;
-        }
+    const db = await database.init();
+
+    const token = Object.values(db.data.tokens).find(t => t.token === sentToken);
+
+    if (token && token.token_expiration_datetime > new Date()) {
+        return true;
     }
 
     return false;

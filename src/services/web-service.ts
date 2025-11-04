@@ -2,21 +2,21 @@ import express, { Express, Request, Response } from 'express';
 import morgan from 'morgan';
 import http from 'http';
 
-import { loadDetectRoutes } from '../routes/detect';
-import { loadCardRoutes } from '../routes/cards';
-import { loadAuthRoutes } from '../routes/auth';
-import { loadSessionsRoutes } from '../routes/sessions';
-import { loadWatchListsRoutes } from '../routes/watch-lists';
-import { loadObjectsRoutes } from '../routes/objects';
-import { loadEventsRoutes } from '../routes/events';
-import { loadCameraRoutes } from '../routes/cameras';
+import { loadDetectRoutes } from '../routes/detect.js';
+import { loadCardRoutes } from '../routes/cards.js';
+import { loadAuthRoutes } from '../routes/auth.js';
+import { loadSessionsRoutes } from '../routes/sessions.js';
+import { loadWatchListsRoutes } from '../routes/watch-lists.js';
+import { loadObjectsRoutes } from '../routes/objects.js';
+import { loadEventsRoutes } from '../routes/events.js';
+import { loadCameraRoutes } from '../routes/cameras.js';
 import path from 'path';
-import { loadUsersRoutes } from '../routes/users';
-import { loadSettingsRoutes } from '../routes/settings';
-import { loadGroupsRoutes } from '../routes/groups';
-import { loadCameraGroupsRoutes } from '../routes/camera_groups';
-import { loadFilesRoutes } from '../routes/files';
-import MyWebSocketServer from './web-socket-server';
+import { loadUsersRoutes } from '../routes/users.js';
+import { loadSettingsRoutes } from '../routes/settings.js';
+import { loadGroupsRoutes } from '../routes/groups.js';
+import { loadCameraGroupsRoutes } from '../routes/camera_groups.js';
+import { loadFilesRoutes } from '../routes/files.js';
+import MyWebSocketServer from './web-socket-server.js';
 
 
 class WebService {
@@ -25,7 +25,7 @@ class WebService {
     public wss?: MyWebSocketServer;
 
     constructor() {
-        this.port = process.env.PORT || '5000';
+        this.port = process.env.PORT || '9093';
         this.app = express();
 
         this.app.use(express.static(path.join(process.cwd(), 'public')));
