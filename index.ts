@@ -5,7 +5,7 @@ import { webService } from './src/services/web-service.js';
 
 async function start() {
     await database.init();
-    timeToLiveLoop();
+    timeToLiveLoop(true);
     console.log(`database initialized...`);
     webService.initialize();
 }

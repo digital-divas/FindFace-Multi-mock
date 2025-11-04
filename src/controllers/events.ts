@@ -273,8 +273,8 @@ async function deleteEverythingBefore(date: moment.Moment) {
     await db.write();
 }
 
-export async function timeToLiveLoop() {
-    while (true) {
+export async function timeToLiveLoop(loop: boolean) {
+    while (loop) {
         try {
             console.log('Running events TTL...');
             await deleteEverythingBefore(moment().subtract(1, 'day'));
