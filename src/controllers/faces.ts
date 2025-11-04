@@ -139,8 +139,38 @@ async function listFaces({ cards }: { cards?: number[]; }) {
 }
 
 async function deleteFace(faceId: string) {
-    // TODO: remove image
     const db = await database.init();
+
+    const face = db.data.faces[faceId];
+
+    const thumbnailSplitted = face.thumbnail.split('/');
+    // 'source_photo': `http://localhost:5000/uploads/cards/xP/${humanId}/face_${safeName}_${uuid}.jpeg`,
+    // 'thumbnail': `http://localhost:5000/uploads/cards/cK/${humanId}/face_${safeName}_thumbnail_${uuid}.jpeg`,
+    const thumbnail = thumbnailSplitted.at(-1);
+    let humanId = thumbnailSplitted.at(-2);
+    if (thumbnail && humanId) {
+        const humanPath = path.join(process.cwd(), 'data', 'human', String(humanId), thumbnail);
+        try {
+            await fs.unlink(humanPath);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, humanPath);
+        }
+    }
+
+    const sourcePhotoSplitted = face.source_photo.split('/');
+    const sourcePhoto = sourcePhotoSplitted.at(-1);
+    humanId = thumbnailSplitted.at(-2);
+
+    if (sourcePhoto && humanId) {
+        const humanPath = path.join(process.cwd(), 'data', 'human', String(humanId), sourcePhoto);
+        try {
+            await fs.unlink(humanPath);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, humanPath);
+        }
+    }
+
+
     delete db.data.faces[faceId];
     await db.write();
 }

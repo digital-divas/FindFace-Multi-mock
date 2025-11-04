@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs/promises';
-import { getEvents } from '../controllers/events.js';
+import { getEvents, getFilePathByUrl } from '../controllers/events.js';
 
 async function getCameraScreenshot(cameraId: string) {
 
@@ -17,20 +17,7 @@ async function getCameraScreenshot(cameraId: string) {
         throw new Error('not found');
     }
 
-    const thumbNailSplitted = thumbnail.split('/');
-    // /uploads/:year/:month/:day/face_event/:filename
-    const fileName = thumbNailSplitted.at(-1);
-    const day = thumbNailSplitted.at(-3);
-    const month = thumbNailSplitted.at(-4);
-    const year = thumbNailSplitted.at(-5);
-
-    if (!fileName || !day || !month || !year) {
-        throw new Error('not found');
-    }
-
-    const filePath = path.join(process.cwd(), 'data', 'face_event', year, month, day, fileName);
-
-    return { filePath, fileName };
+    return getFilePathByUrl(thumbnail);
 }
 
 

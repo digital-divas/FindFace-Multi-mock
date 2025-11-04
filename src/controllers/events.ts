@@ -2,6 +2,8 @@ import path from 'path';
 import { WatchList, getWatchLists } from './watch-lists.js';
 import fs from 'fs/promises';
 import { database } from '../services/database.js';
+import moment from 'moment';
+import { setTimeout } from 'timers/promises';
 
 function randomCharacters(length: number) {
     let result = '';
@@ -196,13 +198,92 @@ async function getEvent(eventId: number) {
     return db.data.events[String(eventId)];
 }
 
+export function getFilePathByUrl(url: string) {
+    const thumbNailSplitted = url.split('/');
+    // /uploads/:year/:month/:day/face_event/:filename
+    const fileName = thumbNailSplitted.at(-1);
+    const day = thumbNailSplitted.at(-3);
+    const month = thumbNailSplitted.at(-4);
+    const year = thumbNailSplitted.at(-5);
+
+    if (!fileName || !day || !month || !year) {
+        throw new Error('not found');
+    }
+
+    const filePath = path.join(process.cwd(), 'data', 'face_event', year, month, day, fileName);
+    return { filePath, fileName };
+}
+
 async function resetEvents() {
     const db = await database.init();
     for (const eventId of Object.keys(db.data.events)) {
+
+        const event = db.data.events[eventId];
+
+        const { filePath: thumbnail } = getFilePathByUrl(event.thumbnail);
+
+        try {
+            await fs.unlink(thumbnail);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, thumbnail);
+        }
+
+        const { filePath: fullframe } = getFilePathByUrl(event.fullframe);
+
+        try {
+            await fs.unlink(fullframe);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, fullframe);
+        }
+
         delete db.data.events[eventId];
     }
-    // TODO: delete pictures
     await db.write();
+}
+
+async function deleteEverythingBefore(date: moment.Moment) {
+
+    const db = await database.init();
+    for (const eventId of Object.keys(db.data.events)) {
+
+        const event = db.data.events[eventId];
+
+        if (moment(event.created_date).isAfter(date)) {
+            continue;
+        }
+
+        const { filePath: thumbnail } = getFilePathByUrl(event.thumbnail);
+
+        try {
+            await fs.unlink(thumbnail);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, thumbnail);
+        }
+
+        const { filePath: fullframe } = getFilePathByUrl(event.fullframe);
+
+        try {
+            await fs.unlink(fullframe);
+        } catch (err) {
+            console.error(`couldn't not delete file:`, fullframe);
+        }
+
+        delete db.data.events[eventId];
+    }
+    await db.write();
+}
+
+export async function timeToLiveLoop() {
+    while (true) {
+        try {
+            console.log('Running events TTL...');
+            await deleteEverythingBefore(moment().subtract(1, 'day'));
+        } catch (err) {
+            console.error(err);
+        } finally {
+            await setTimeout(moment.duration(10, 'minutes').asMilliseconds());
+        }
+    }
 }
 
 async function getEvents(params: {
