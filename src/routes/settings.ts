@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import { validAuthorization } from '../services/route_middlewares.js';
+import moment from 'moment';
 
 function loadSettingsRoutes(app: Express) {
 
@@ -16,10 +17,10 @@ function loadSettingsRoutes(app: Express) {
             'minimum_body_quality': 0.6,
             'ignore_unmatched': false,
             'license_accepted': true,
-            'face_events_max_matched_age': 864000,
-            'face_events_max_unmatched_age': 864000,
-            'face_events_max_fullframe_matched_age': 3600,
-            'face_events_max_fullframe_unmatched_age': 3600,
+            'face_events_max_matched_age': moment.duration(1, 'day').asSeconds(),
+            'face_events_max_unmatched_age': moment.duration(1, 'day').asSeconds(),
+            'face_events_max_fullframe_matched_age': moment.duration(1, 'day').asSeconds(),
+            'face_events_max_fullframe_unmatched_age': moment.duration(1, 'day').asSeconds(),
             'face_cluster_events_max_age': 15552000,
             'face_cluster_events_keep_best_max_age': 7776000,
             'car_events_max_matched_age': 2592000,
