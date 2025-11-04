@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "npx tsc && cp -r ./public ./dist/public",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "eslint": "eslint ./src",
     "eslint_fix": "eslint ./src --fix",
-    "test": "env TS_NODE_TRANSPILE_ONLY=true mocha -r ts-node/register 'tests/**/**.test.ts'  --timeout 180000 --exit",
-    "coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc --reporter=html --reporter=text -- mocha -r ts-node/register 'tests/**/**.test.ts' --timeout 180000 --exit && nyc report --reporter=cobertura && mv ./coverage/cobertura-coverage.xml ./coverage.cobertura.xml",
-    "devops_coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc -- mocha -r ts-node/register 'tests/**/**.test.ts' --reporter ./tests/assets/multiple_reporters.js --timeout 180000 --exit",
+    "test": "node --loader ts-node/esm node_modules/mocha/bin/mocha.js 'tests/**/*.test.ts' --timeout 180000 --exit",
+    "coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc --reporter=html --reporter=text -- node --loader ts-node/esm node_modules/mocha/bin/mocha.js 'tests/**/**.test.ts' --timeout 180000 --exit && nyc report --reporter=cobertura && mv ./coverage/cobertura-coverage.xml ./coverage.cobertura.xml",
+    "devops_coverage": "env TS_NODE_TRANSPILE_ONLY=true nyc -- node --loader ts-node/esm node_modules/mocha/bin/mocha.js 'tests/**/**.test.ts' --reporter ./tests/assets/multiple_reporters.cjs --timeout 180000 --exit",
     "generate_cobertura": "nyc report --reporter=cobertura"
   },
   "repository": {
@@ -23,6 +24,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "lowdb": "^7.0.1",
+    "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "superagent": "^7.1.6",
@@ -49,7 +52,8 @@
     "nodemon": "^2.0.16",
     "nyc": "^15.1.0",
     "supertest": "^6.2.3",
-    "ts-node": "^10.8.1",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
 }

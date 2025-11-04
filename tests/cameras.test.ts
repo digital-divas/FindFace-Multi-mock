@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { agent } from 'supertest';
 
-import { webService } from '../src/services/web-service';
-import { Camera } from '../src/controllers/cameras';
+import { webService } from '../src/services/web-service.js';
+import { Camera } from '../src/controllers/cameras.js';
 
 const request = agent(webService.app);
 

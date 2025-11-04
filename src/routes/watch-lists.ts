@@ -1,19 +1,19 @@
 import { Express, Request, Response } from 'express';
-import { validAuthorization } from '../services/route_middlewares';
-import { getWatchLists, createWatchList } from '../controllers/watch-lists';
+import { validAuthorization } from '../services/route_middlewares.js';
+import { getWatchLists, createWatchList } from '../controllers/watch-lists.js';
 
 function loadWatchListsRoutes(app: Express) {
 
     app.get('/watch-lists/', validAuthorization, async (req: Request, res: Response) => {
         return res.status(200).json({
-            'results': getWatchLists()
+            'results': await getWatchLists()
         });
 
     });
 
     app.get('/watch-lists/count/', validAuthorization, async (req: Request, res: Response) => {
         return res.status(200).json({
-            'count': getWatchLists().length
+            'count': (await getWatchLists()).length
         });
 
     });
@@ -28,7 +28,7 @@ function loadWatchListsRoutes(app: Express) {
             });
         }
 
-        const watchList = createWatchList(req.body.name, req.body.active === true);
+        const watchList = await createWatchList(req.body.name, req.body.active === true);
 
         return res.status(201).json(watchList);
     });

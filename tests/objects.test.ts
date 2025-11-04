@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { agent } from 'supertest';
 
-import { webService } from '../src/services/web-service';
+import { webService } from '../src/services/web-service.js';
 import { readFile } from 'fs/promises';
 
 const request = agent(webService.app);
@@ -33,7 +33,7 @@ describe('Objects Route Testing', async () => {
     });
 
     it('test crud face', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         let res;
         res = await request.post(`/objects/faces/`)
@@ -62,7 +62,7 @@ describe('Objects Route Testing', async () => {
         expect(res.body.id).to.not.be.undefined;
         const anotherHuman = res.body.id;
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         res = await request.post(`/objects/faces/`)
             .field('card', String(anotherHuman))
@@ -80,7 +80,7 @@ describe('Objects Route Testing', async () => {
     });
 
     it('no card on request', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/objects/faces/`)
             .attach('source_photo', file, {
@@ -93,7 +93,7 @@ describe('Objects Route Testing', async () => {
     });
 
     it('invalid card on request', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/objects/faces/`)
             .field('card', '-1')

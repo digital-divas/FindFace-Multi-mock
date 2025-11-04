@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
+import { database } from '../services/database.js';
 
 interface Face {
     id: string;
@@ -24,7 +25,9 @@ interface Face {
     meta: { [key: string]: unknown; };
 }
 
-const faces: { [faceId: string]: Face | undefined; } = {};
+export interface FaceData {
+    [faceId: string]: Face;
+}
 
 function makeId(length: number) {
     let result = '';
@@ -85,28 +88,26 @@ async function createFace(humanId: number, photo: Express.Multer.File) {
         'meta': {}
     };
 
-    faces[faceId] = face;
+    const db = await database.init();
+    db.data.faces[faceId] = face;
+    await db.write();
 
     return face;
 }
 
-function getFace(faceId: string) {
-    const face = faces[faceId];
+async function getFace(faceId: string) {
+    const db = await database.init();
+
+    const face = db.data.faces[faceId];
     return face;
 }
 
-function deleteFacesFromHuman(humanId: number) {
+async function deleteFacesFromHuman(humanId: number) {
     const rmIds: string[] = [];
-    for (const faceId in faces) {
-        if (!Object.prototype.hasOwnProperty.call(faces, faceId)) {
-            continue;
-        }
 
-        const face = faces[faceId];
+    const db = await database.init();
 
-        if (!face) {
-            continue;
-        }
+    for (const face of Object.values(db.data.faces)) {
 
         if (face.card == humanId) {
             rmIds.push(face.id);
@@ -114,20 +115,18 @@ function deleteFacesFromHuman(humanId: number) {
     }
 
     for (const rmId of rmIds) {
-        deleteFace(rmId);
+        await deleteFace(rmId);
     }
 }
 
-function listFaces({ cards }: { cards?: number[]; }) {
-    const faceObjs = Object.values(faces);
+async function listFaces({ cards }: { cards?: number[]; }) {
+    const db = await database.init();
+
+    const faceObjs = Object.values(db.data.faces);
 
     const faceReturn: Face[] = [];
 
     for (const face of faceObjs) {
-
-        if (!face) {
-            continue;
-        }
 
         if (cards && !cards.includes(face.card)) {
             continue;
@@ -139,8 +138,11 @@ function listFaces({ cards }: { cards?: number[]; }) {
     return faceReturn;
 }
 
-function deleteFace(faceId: string) {
-    delete faces[faceId];
+async function deleteFace(faceId: string) {
+    // TODO: remove image
+    const db = await database.init();
+    delete db.data.faces[faceId];
+    await db.write();
 }
 
 export { createFace, getFace, deleteFacesFromHuman, deleteFace, listFaces };

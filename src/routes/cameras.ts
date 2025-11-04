@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
-import { validAuthorization } from '../services/route_middlewares';
-import { CameraController } from '../controllers/cameras';
+import { validAuthorization } from '../services/route_middlewares.js';
+import { CameraController } from '../controllers/cameras.js';
 
 function loadCameraRoutes(app: Express) {
 
@@ -41,7 +41,7 @@ function loadCameraRoutes(app: Express) {
             });
         }
 
-        const camera = CameraController.create({ name: req.body.name, group: req.body.group });
+        const camera = await CameraController.create({ name: req.body.name, group: req.body.group });
 
         return res.status(201).json(camera);
 
@@ -51,7 +51,7 @@ function loadCameraRoutes(app: Express) {
 
         const external_detector = req.query.external_detector;
 
-        const cameras = CameraController.list({
+        const cameras = await CameraController.list({
             external_detector: external_detector === undefined ? undefined : external_detector === 'true'
         });
 
@@ -77,7 +77,7 @@ function loadCameraRoutes(app: Express) {
     app.get('/cameras/count/', validAuthorization, async (req: Request, res: Response) => {
         const external_detector = req.query.external_detector;
 
-        const cameras = CameraController.list({
+        const cameras = await CameraController.list({
             external_detector: external_detector === undefined ? undefined : external_detector === 'true'
         });
 
@@ -89,7 +89,7 @@ function loadCameraRoutes(app: Express) {
 
     app.delete('/cameras/:id/', validAuthorization, async (req: Request, res: Response) => {
         const cameraId = Number(req.params.id);
-        const camera = CameraController.get(cameraId);
+        const camera = await CameraController.get(cameraId);
 
         if (!camera) {
             return res.status(404).json({
@@ -98,7 +98,7 @@ function loadCameraRoutes(app: Express) {
             });
         }
 
-        CameraController.delete(cameraId);
+        await CameraController.delete(cameraId);
         return res.status(204).send();
 
     });

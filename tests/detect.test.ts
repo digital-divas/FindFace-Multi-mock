@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { agent } from 'supertest';
 import { readFile } from 'fs/promises';
 
-import { webService } from '../src/services/web-service';
+import { webService } from '../src/services/web-service.js';
 
 const request = agent(webService.app);
 
@@ -25,7 +25,7 @@ describe('Detect Route Testing', async () => {
 
     it('detect object on image', async () => {
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -49,7 +49,7 @@ describe('Detect Route Testing', async () => {
 
     it('detect without token', async () => {
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -74,7 +74,7 @@ describe('Detect Route Testing', async () => {
 
     it('detect invalid token', async () => {
 
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .field('attributes', JSON.stringify({
@@ -99,7 +99,7 @@ describe('Detect Route Testing', async () => {
     });
 
     it('no attributes on request', async () => {
-        const file = await readFile(__dirname + '/assets/11296869.jpg');
+        const file = await readFile(process.cwd() + '/tests/assets/11296869.jpg');
 
         const res = await request.post(`/detect/`)
             .attach('photo', file, {

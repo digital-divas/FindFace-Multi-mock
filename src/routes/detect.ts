@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
-import { validAuthorization } from '../services/route_middlewares';
+import { validAuthorization } from '../services/route_middlewares.js';
 
 const upload = multer({
     storage: multer.memoryStorage()

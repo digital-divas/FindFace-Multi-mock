@@ -1,8 +1,8 @@
 import { Express, Request, Response } from 'express';
 import multer from 'multer';
-import { validAuthorization } from '../services/route_middlewares';
-import { createEvent, getEvent, getEvents } from '../controllers/events';
-import { CameraController } from '../controllers/cameras';
+import { validAuthorization } from '../services/route_middlewares.js';
+import { createEvent, getEvent, getEvents } from '../controllers/events.js';
+import { CameraController } from '../controllers/cameras.js';
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -50,7 +50,7 @@ function loadEventsRoutes(app: Express) {
             });
         }
 
-        const camera = CameraController.get(req.body.camera);
+        const camera = await CameraController.get(req.body.camera);
 
         if (!camera) {
             return res.status(400).json({
@@ -105,7 +105,7 @@ function loadEventsRoutes(app: Express) {
             });
         }
 
-        const event = getEvent(eventId);
+        const event = await getEvent(eventId);
         if (!event) {
             return res.status(404).json({
                 code: 'NOT_FOUND',
@@ -128,7 +128,7 @@ function loadEventsRoutes(app: Express) {
         const page: number = Number(req.query.page) || 0;
         const limit: number = Number(req.query.limit) || 10;
 
-        const events = getEvents({
+        const events = await getEvents({
             page,
             limit: limit > 1000 ? 1000 : limit,
             cameras: req.query.cameras ? String(req.query.cameras) : undefined,

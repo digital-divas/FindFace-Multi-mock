@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { validAuthorization } from '../services/route_middlewares';
+import { validAuthorization } from '../services/route_middlewares.js';
 
 function loadCameraGroupsRoutes(app: Express) {
 

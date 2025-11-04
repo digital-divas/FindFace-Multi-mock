@@ -1,6 +1,7 @@
 import path from 'path';
-import { WatchList, getWatchLists } from './watch-lists';
+import { WatchList, getWatchLists } from './watch-lists.js';
 import fs from 'fs/promises';
+import { database } from '../services/database.js';
 
 function randomCharacters(length: number) {
     let result = '';
@@ -76,8 +77,15 @@ interface EventFace {
     verbose_camera_group: object;
 }
 
+export interface EventFaceData {
+    [eventId: string]: EventFace;
+}
+
 let eventId = 0;
-const events: { [eventId: string]: EventFace | undefined; } = {};
+
+export function setEventId(newEventId: number) {
+    eventId = newEventId;
+}
 
 async function createEvent({ created_date, camera, photo }: { created_date?: string; camera: number; photo: Express.Multer.File; }) {
     eventId++;
@@ -95,6 +103,8 @@ async function createEvent({ created_date, camera, photo }: { created_date?: str
     await fs.mkdir(datePath, { recursive: true });
     await fs.writeFile(path.join(datePath, `${eventId}_face_thumbnail_${uuid}.jpg`), photo.buffer);
     await fs.writeFile(path.join(datePath, `${eventId}_face_full_frame_${uuid}.jpg`), photo.buffer);
+
+    const watchList = (await getWatchLists())[0];
 
     const eventFace: EventFace = {
         id: String(eventId),
@@ -123,7 +133,7 @@ async function createEvent({ created_date, camera, photo }: { created_date?: str
         confidence: (Math.random() * 0.45) + 0.5,
         external_detector: true,
         looks_like_confidence: null,
-        matched_lists: [getWatchLists()[0].id],
+        matched_lists: [watchList.id],
         meta: {},
         quality: 0.79995,
         video_archive: null,
@@ -167,27 +177,35 @@ async function createEvent({ created_date, camera, photo }: { created_date?: str
                 id: null
             }
         },
-        verbose_matched_lists: [getWatchLists()[0]],
+        verbose_matched_lists: [watchList],
         // TODO: once camera is implemented, bring it here
         verbose_camera: {},
         // TODO: once camera group is implemented, bring it here
         verbose_camera_group: {}
     };
-    events[eventId] = eventFace;
+    const db = await database.init();
+    db.data.events[String(eventId)] = eventFace;
+
+    await db.write();
+
     return eventFace;
 }
 
-function getEvent(eventId: number) {
-    return events[eventId];
+async function getEvent(eventId: number) {
+    const db = await database.init();
+    return db.data.events[String(eventId)];
 }
 
-function resetEvents() {
-    for (const eventId of Object.keys(events)) {
-        delete events[eventId];
+async function resetEvents() {
+    const db = await database.init();
+    for (const eventId of Object.keys(db.data.events)) {
+        delete db.data.events[eventId];
     }
+    // TODO: delete pictures
+    await db.write();
 }
 
-function getEvents(params: {
+async function getEvents(params: {
     looks_like?: string;
     page: number;
     limit: number;
@@ -199,8 +217,9 @@ function getEvents(params: {
     cameras?: string;
 }) {
     const offset = params.page * params.limit;
+    const db = await database.init();
 
-    const eventList = Object.values(events);
+    const eventList = Object.values(db.data.events);
 
     // most recent first
     eventList.sort((a, b) => {
