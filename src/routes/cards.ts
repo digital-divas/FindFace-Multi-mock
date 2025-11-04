@@ -12,15 +12,54 @@ function loadCardRoutes(app: Express) {
         const humans = await HumanController.list({
             page,
             limit: limit > 1000 ? 1000 : limit,
-            active: req.query.active ? String(req.query.active) === 'true' : undefined,
+            active: req.query.active !== undefined ? String(req.query.active).toLowerCase() === 'true' : undefined,
             watch_lists: req.query.watch_lists ? String(req.query.watch_lists) : undefined,
             looks_like: req.query.looks_like ? String(req.query.looks_like) : undefined,
             threshold: Number(req.query.threshold) || 0.714,
         });
 
+        let nextPage: string | null = null;
+        let prevPage: string | null = null;
+
+        if (humans.length === limit) {
+            const pageUrl = new URL(`http://${req.get('host') || 'localhost:5000'}`);
+            pageUrl.pathname = '/cards/humans/';
+
+            for (const [key, value] of Object.entries(req.query)) {
+                if (Array.isArray(value)) {
+                    for (const v of value) {
+                        pageUrl.searchParams.append(key, String(v));
+                    }
+                } else if (value !== undefined && value !== null) {
+                    pageUrl.searchParams.set(key, String(value));
+                }
+            }
+            pageUrl.searchParams.set('page', String(page + 1));
+
+            nextPage = pageUrl.toString();
+        }
+
+        if (page !== 0) {
+            const pageUrl = new URL(`http://${req.get('host') || 'localhost:5000'}`);
+            pageUrl.pathname = '/cards/humans/';
+
+            for (const [key, value] of Object.entries(req.query)) {
+                if (Array.isArray(value)) {
+                    for (const v of value) {
+                        pageUrl.searchParams.append(key, String(v));
+                    }
+                } else if (value !== undefined && value !== null) {
+                    pageUrl.searchParams.set(key, String(value));
+                }
+            }
+            pageUrl.searchParams.set('page', String(page - 1));
+
+            prevPage = pageUrl.toString();
+        }
+
         return res.status(200).json({
-            'next_page': null,
-            'prev_page': null,
+            'next_page': nextPage,
+            'prev_page': prevPage,
             'results': humans
         });
 
