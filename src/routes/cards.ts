@@ -162,6 +162,10 @@ function loadCardRoutes(app: Express) {
             human.active = req.body.active;
         }
 
+        if (req.body.watch_lists) {
+            human.watch_lists = req.body.watch_lists;
+        }
+
         return res.status(200).json(human);
 
     });
